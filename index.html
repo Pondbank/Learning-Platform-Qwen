@@ -10,59 +10,67 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f7ffe9;
+      --bg: #f8ffe8;
       --bg-accent: rgba(88, 204, 2, 0.16);
-      --card: rgba(255, 255, 255, 0.78);
-      --subcard: rgba(255, 255, 255, 0.62);
-      --text: #16241c;
-      --muted: #5f7166;
-      --border: rgba(22, 36, 28, 0.10);
+      --card: rgba(255, 255, 255, 0.82);
+      --subcard: rgba(255, 255, 255, 0.66);
+      --text: #17251c;
+      --muted: #61705f;
+      --border: rgba(23, 37, 28, 0.10);
       --primary: #58cc02;
       --primary-dark: #46a302;
       --primary-soft: rgba(88, 204, 2, 0.14);
       --danger: #ff4b4b;
       --danger-soft: rgba(255, 75, 75, 0.12);
-      --shadow: 0 14px 40px rgba(18, 46, 22, 0.10);
-      --glass-blur: blur(16px);
+      --shadow: 0 18px 50px rgba(18, 46, 22, 0.10);
+      --glass-blur: blur(18px);
+      --skeleton-base: rgba(120, 130, 120, 0.16);
+      --skeleton-shine: rgba(255, 255, 255, 0.45);
     }
 
     [data-theme="dark"] {
-      --bg: #0b1220;
-      --bg-accent: rgba(88, 204, 2, 0.16);
-      --card: rgba(15, 23, 42, 0.72);
-      --subcard: rgba(15, 23, 42, 0.58);
-      --text: #e8eef7;
-      --muted: #9aa8bd;
+      --bg: #0a111f;
+      --bg-accent: rgba(88, 204, 2, 0.15);
+      --card: rgba(14, 22, 38, 0.76);
+      --subcard: rgba(15, 23, 42, 0.60);
+      --text: #e9eef7;
+      --muted: #98a7bd;
       --border: rgba(255, 255, 255, 0.12);
       --primary-soft: rgba(88, 204, 2, 0.16);
       --danger-soft: rgba(255, 75, 75, 0.16);
-      --shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
+      --shadow: 0 22px 60px rgba(0, 0, 0, 0.38);
+      --skeleton-base: rgba(255, 255, 255, 0.09);
+      --skeleton-shine: rgba(255, 255, 255, 0.14);
     }
 
     * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, var(--bg-accent), transparent 32%),
-        radial-gradient(circle at bottom right, rgba(88, 204, 2, 0.10), transparent 28%),
+        radial-gradient(circle at top left, var(--bg-accent), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(88, 204, 2, 0.10), transparent 26%),
         var(--bg);
       min-height: 100vh;
     }
+
+    body.busy { cursor: progress; }
 
     .hidden { display: none !important; }
 
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 60;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 14px 18px;
+      padding: 12px 18px;
       background: var(--card);
       border-bottom: 1px solid var(--border);
       backdrop-filter: var(--glass-blur);
@@ -70,17 +78,31 @@
     }
 
     .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       font-weight: 900;
-      letter-spacing: -0.03em;
-      font-size: 1.15rem;
-      color: var(--primary-dark);
+      letter-spacing: -0.04em;
+      font-size: 1.1rem;
+      color: var(--text);
       white-space: nowrap;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #79e30b, var(--primary));
+      box-shadow: 0 4px 0 var(--primary-dark);
+      font-size: 1rem;
     }
 
     .top-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
       justify-content: flex-end;
     }
@@ -93,21 +115,27 @@
       border-radius: 999px;
       background: var(--primary-soft);
       color: var(--primary-dark);
-      font-weight: 800;
+      font-weight: 900;
       border: 1px solid rgba(88, 204, 2, 0.22);
     }
 
     .view {
       width: min(1120px, calc(100% - 24px));
-      margin: 22px auto 42px;
+      margin: 22px auto 46px;
       display: grid;
-      gap: 18px;
+      gap: 16px;
+      animation: viewIn 0.22s ease;
+    }
+
+    @keyframes viewIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
     }
 
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 26px;
+      border-radius: 28px;
       box-shadow: var(--shadow);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
@@ -116,16 +144,16 @@
 
     .subcard {
       background: var(--subcard);
-      border-radius: 20px;
+      border-radius: 22px;
       padding: 16px;
       border: 1px solid var(--border);
     }
 
-    h1, h2, h3 { margin: 0 0 10px; line-height: 1.15; letter-spacing: -0.03em; }
-    h1 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
-    h2 { font-size: 1.25rem; }
+    h1, h2, h3 { margin: 0 0 10px; line-height: 1.12; letter-spacing: -0.04em; }
+    h1 { font-size: clamp(1.7rem, 3vw, 2.5rem); }
+    h2 { font-size: 1.3rem; }
     h3 { font-size: 1.02rem; }
-    p { margin: 0 0 10px; line-height: 1.55; }
+    p { margin: 0 0 10px; line-height: 1.6; }
 
     .muted { color: var(--muted); }
     .small { font-size: 0.92rem; }
@@ -146,58 +174,60 @@
       border: 0;
       cursor: pointer;
       font-family: inherit;
-      font-weight: 800;
-      border-radius: 16px;
-      padding: 12px 18px;
+      font-weight: 900;
+      border-radius: 18px;
+      padding: 13px 18px;
       font-size: 0.98rem;
-      transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.2s ease;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.2s ease, background 0.2s ease;
       background: var(--subcard);
       color: var(--text);
       border: 1px solid var(--border);
-      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.10);
+      text-align: center;
     }
 
-    .btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
-    }
-
-    .btn:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.10); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
 
     .btn-primary {
-      background: linear-gradient(180deg, #6ee106, var(--primary));
-      color: #08240a;
+      background: linear-gradient(180deg, #79e30b, var(--primary));
+      color: #07230a;
       border: 1px solid rgba(70, 163, 2, 0.35);
       box-shadow: 0 5px 0 var(--primary-dark);
     }
 
     .btn-primary:active { box-shadow: 0 2px 0 var(--primary-dark); }
 
-    .btn-secondary {
-      background: transparent;
+    .btn-secondary { background: transparent; color: var(--text); }
+    .btn-small { padding: 9px 13px; font-size: 0.88rem; border-radius: 14px; }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--subcard);
       color: var(--text);
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      flex: 0 0 auto;
     }
 
-    .btn-small {
-      padding: 9px 13px;
-      font-size: 0.88rem;
-      border-radius: 13px;
-    }
+    .icon-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.08); }
 
     input, select, textarea {
       width: 100%;
       border: 1px solid var(--border);
       background: var(--subcard);
       color: var(--text);
-      border-radius: 16px;
-      padding: 13px 14px;
+      border-radius: 18px;
+      padding: 14px;
       font: inherit;
       outline: none;
       margin: 8px 0;
+      transition: box-shadow 0.18s ease, border-color 0.18s ease;
     }
 
     input:focus, select:focus, textarea:focus {
@@ -208,13 +238,13 @@
     textarea { min-height: 120px; resize: vertical; }
 
     .auth-card {
-      width: min(460px, 100%);
-      margin: 6vh auto 0;
+      width: min(470px, 100%);
+      margin: 7vh auto 0;
     }
 
     .gradient-card {
       background:
-        linear-gradient(135deg, rgba(88, 204, 2, 0.92), rgba(34, 197, 94, 0.88)),
+        linear-gradient(135deg, rgba(88, 204, 2, 0.94), rgba(34, 197, 94, 0.90)),
         var(--card);
       color: #05270b;
       border: 1px solid rgba(255, 255, 255, 0.22);
@@ -233,47 +263,47 @@
     .select-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
     .stat-card { text-align: center; padding: 18px 14px; }
-    .stat-value { font-size: 1.8rem; font-weight: 900; margin-bottom: 6px; }
+    .stat-value { font-size: 1.9rem; font-weight: 900; margin-bottom: 6px; }
 
     .badge-card, .course-card {
       padding: 16px;
-      border-radius: 22px;
+      border-radius: 24px;
       background: var(--subcard);
       border: 1px solid var(--border);
     }
 
-    .course-card { cursor: pointer; transition: transform 0.15s ease; }
-    .course-card:hover { transform: translateY(-2px); }
+    .course-card { cursor: pointer; transition: transform 0.16s ease, box-shadow 0.16s ease; }
+    .course-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 
-    .badge-icon { font-size: 1.7rem; margin-bottom: 8px; }
-    .badge-name { font-weight: 800; margin-bottom: 4px; }
+    .badge-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .badge-name { font-weight: 900; margin-bottom: 4px; }
 
     .progress-wrap { margin: 16px 0; }
 
-    .progress {
-      height: 15px;
+    .progress, .player-progress {
+      height: 14px;
       border-radius: 999px;
       background: rgba(120, 130, 120, 0.18);
       overflow: hidden;
       border: 1px solid var(--border);
     }
 
-    .progress-fill {
+    .progress-fill, .player-progress-fill {
       height: 100%;
       width: 0%;
       border-radius: 999px;
-      background: linear-gradient(90deg, #58cc02, #9ff23a);
-      transition: width 0.7s ease;
+      background: linear-gradient(90deg, #58cc02, #a4f83c);
+      transition: width 0.55s cubic-bezier(.2,.8,.2,1);
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
-      padding: 7px 11px;
+      padding: 8px 12px;
       border-radius: 999px;
       background: var(--primary-soft);
       color: var(--primary-dark);
-      font-weight: 800;
+      font-weight: 900;
       font-size: 0.85rem;
       border: 1px solid rgba(88, 204, 2, 0.18);
     }
@@ -286,13 +316,13 @@
       justify-content: space-between;
       gap: 14px;
       padding: 14px;
-      border-radius: 18px;
+      border-radius: 20px;
       margin: 10px 0;
       cursor: pointer;
-      transition: transform 0.12s ease;
+      transition: transform 0.14s ease, box-shadow 0.14s ease;
     }
 
-    .card-row:hover { transform: translateX(2px); }
+    .card-row:hover { transform: translateX(3px); box-shadow: var(--shadow); }
 
     .lesson-main {
       display: flex;
@@ -301,31 +331,133 @@
       min-width: 0;
     }
 
-    .lesson-icon { font-size: 1.2rem; padding-top: 2px; }
-    .lesson-title { font-weight: 800; }
-
-    .lesson-section {
-      margin: 18px 0;
-      padding: 16px;
-      border-radius: 20px;
-      background: var(--subcard);
-      border: 1px solid var(--border);
+    .lesson-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--primary-soft);
+      border: 1px solid rgba(88,204,2,0.18);
+      flex: 0 0 auto;
     }
 
-    .checklist {
-      margin: 0;
-      padding-left: 20px;
+    .lesson-title { font-weight: 900; }
+
+    .player-card {
+      width: min(860px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .player-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .player-progress { flex: 1; }
+
+    .slides {
+      min-height: 380px;
       display: grid;
+      align-content: start;
+      gap: 14px;
+    }
+
+    .slide-card {
+      background: var(--subcard);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 26px;
+      min-height: 340px;
+      animation: slideIn 0.26s cubic-bezier(.2,.8,.2,1);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(22px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .slide-emoji {
+      width: 68px;
+      height: 68px;
+      font-size: 2rem;
+      display: grid;
+      place-items: center;
+      border-radius: 24px;
+      background: var(--primary-soft);
+      border: 1px solid rgba(88,204,2,0.18);
+      margin-bottom: 14px;
+    }
+
+    .slide-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.78rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .slide-body { font-size: 1.03rem; line-height: 1.65; }
+    .big-text { font-size: 1.15rem; font-weight: 700; line-height: 1.55; }
+
+    .chips {
+      display: flex;
       gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0 14px;
+    }
+
+    .chip {
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-weight: 900;
+      font-size: 0.82rem;
+      border: 1px solid rgba(88,204,2,0.18);
     }
 
     .callout {
       margin-top: 12px;
-      padding: 12px 14px;
-      border-radius: 14px;
+      padding: 14px;
+      border-radius: 18px;
       background: var(--primary-soft);
       border: 1px solid rgba(88, 204, 2, 0.18);
     }
+
+    .player-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .lesson-actions {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .tutor-card { margin-top: 14px; padding: 0; overflow: hidden; }
+
+    .tutor-toggle {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-weight: 900;
+      padding: 16px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tutor-body { padding: 0 16px 16px; }
 
     .tutor-messages {
       min-height: 220px;
@@ -334,7 +466,7 @@
       display: grid;
       gap: 10px;
       padding: 12px;
-      border-radius: 18px;
+      border-radius: 20px;
       background: var(--subcard);
       border: 1px solid var(--border);
       margin-bottom: 12px;
@@ -342,10 +474,11 @@
 
     .tutor-msg {
       max-width: 86%;
-      padding: 11px 13px;
-      border-radius: 16px;
-      line-height: 1.45;
+      padding: 12px 14px;
+      border-radius: 18px;
+      line-height: 1.5;
       white-space: pre-wrap;
+      animation: slideIn 0.18s ease;
     }
 
     .tutor-msg.user {
@@ -360,7 +493,10 @@
       border: 1px solid var(--border);
     }
 
-    .question-card { margin: 14px 0; }
+    .question-prompt {
+      font-size: 1.35rem;
+      margin: 6px 0 16px;
+    }
 
     .options {
       display: grid;
@@ -371,33 +507,89 @@
     .option {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
+      gap: 12px;
+      padding: 15px;
+      border-radius: 18px;
+      border: 2px solid var(--border);
       background: var(--subcard);
       cursor: pointer;
+      font-weight: 700;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
+      user-select: none;
+    }
+
+    .option:hover { transform: translateY(-1px); }
+    .option input { width: auto; margin: 0; accent-color: var(--primary); }
+    .option.selected { border-color: var(--primary); background: var(--primary-soft); }
+    .option.correct { border-color: var(--primary); background: rgba(88, 204, 2, 0.16); }
+    .option.incorrect { border-color: var(--danger); background: var(--danger-soft); }
+    .option.disabled { pointer-events: none; opacity: 0.82; }
+
+    .short-answer.correct { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-soft); }
+    .short-answer.incorrect { border-color: var(--danger); box-shadow: 0 0 0 4px var(--danger-soft); }
+
+    .quiz-feedback {
+      margin: 14px 0;
+      padding: 16px;
+      border-radius: 22px;
+      font-weight: 900;
+      animation: slideIn 0.2s ease;
+    }
+
+    .quiz-feedback.correct {
+      background: rgba(88, 204, 2, 0.14);
+      border: 1px solid rgba(88, 204, 2, 0.3);
+    }
+
+    .quiz-feedback.incorrect {
+      background: var(--danger-soft);
+      border: 1px solid rgba(255, 75, 75, 0.3);
+    }
+
+    .feedback-explanation {
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.5;
     }
 
     .score-card {
       text-align: center;
-      padding: 28px;
-      border-radius: 26px;
-      background: linear-gradient(135deg, rgba(88, 204, 2, 0.95), rgba(16, 185, 129, 0.9));
+      padding: 30px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(88, 204, 2, 0.96), rgba(16, 185, 129, 0.92));
       color: #04240b;
       margin-bottom: 16px;
+      animation: pop 0.3s cubic-bezier(.2,.8,.2,1);
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     .score-number {
-      font-size: clamp(2.6rem, 7vw, 4rem);
+      font-size: clamp(2.8rem, 8vw, 4.4rem);
       font-weight: 900;
       line-height: 1;
       margin-bottom: 8px;
     }
 
-    .result-card { border-left: 6px solid transparent; }
-    .result-correct { border-left-color: var(--primary); background: rgba(88, 204, 2, 0.08); }
-    .result-incorrect { border-left-color: var(--danger); background: var(--danger-soft); }
+    .result-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px;
+      border-radius: 18px;
+      margin: 10px 0;
+      border: 1px solid var(--border);
+      background: var(--subcard);
+    }
+
+    .result-item.correct { border-left: 5px solid var(--primary); }
+    .result-item.incorrect { border-left: 5px solid var(--danger); }
+    .result-icon { font-size: 1.2rem; padding-top: 2px; }
+    .result-prompt { font-weight: 800; margin-bottom: 4px; }
 
     .practice-question {
       padding: 12px 0;
@@ -423,13 +615,32 @@
     .table th { color: var(--muted); font-size: 0.9rem; }
 
     .empty {
-      padding: 22px;
+      padding: 24px;
       text-align: center;
       color: var(--muted);
       border: 1px dashed var(--border);
-      border-radius: 18px;
+      border-radius: 22px;
       background: var(--subcard);
     }
+
+    .skeleton {
+      position: relative;
+      overflow: hidden;
+      background: var(--skeleton-base);
+      border-radius: 14px;
+      min-height: 14px;
+    }
+
+    .skeleton::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, var(--skeleton-shine), transparent);
+      animation: shimmer 1.15s infinite;
+    }
+
+    @keyframes shimmer { 100% { transform: translateX(100%); } }
 
     .loading {
       position: fixed;
@@ -437,32 +648,66 @@
       z-index: 100;
       display: grid;
       place-items: center;
-      background: rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.22);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      transition: opacity 0.18s ease;
+      pointer-events: none;
     }
+
+    .loading.show { opacity: 1; pointer-events: auto; }
 
     .loading-inner {
       display: grid;
       place-items: center;
       gap: 12px;
-      padding: 26px 30px;
-      border-radius: 24px;
+      padding: 28px 32px;
+      border-radius: 28px;
       background: var(--card);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
-      font-weight: 800;
+      font-weight: 900;
+      width: min(92vw, 360px);
+      text-align: center;
     }
 
-    .spinner {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 5px solid rgba(88, 204, 2, 0.2);
-      border-top-color: var(--primary);
-      animation: spin 0.8s linear infinite;
+    .loading-logo {
+      width: 62px;
+      height: 62px;
+      font-size: 1.8rem;
+      display: grid;
+      place-items: center;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #79e30b, var(--primary));
+      box-shadow: 0 5px 0 var(--primary-dark);
+      animation: bounce 0.9s infinite alternate ease-in-out;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-7px); }
+    }
+
+    .loading-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(120,130,120,0.18);
+      overflow: hidden;
+    }
+
+    .loading-bar-fill {
+      width: 42%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #58cc02, #a4f83c);
+      animation: indeterminate 1.1s infinite ease-in-out;
+    }
+
+    @keyframes indeterminate {
+      0% { transform: translateX(-120%); }
+      100% { transform: translateX(280%); }
+    }
 
     .toast {
       position: fixed;
@@ -478,49 +723,41 @@
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
       padding: 13px 18px;
-      border-radius: 16px;
-      font-weight: 700;
+      border-radius: 18px;
+      font-weight: 800;
       max-width: min(92vw, 560px);
       text-align: center;
     }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     .toast.error { border-color: rgba(255, 75, 75, 0.4); }
 
     @media (max-width: 768px) {
-      .stat-grid, .achievements-grid, .courses-grid, .select-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .topbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .top-actions {
-        width: 100%;
-        justify-content: flex-start;
-      }
+      .stat-grid, .achievements-grid, .courses-grid, .select-grid { grid-template-columns: 1fr 1fr; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .top-actions { width: 100%; justify-content: flex-start; }
+      .slides { min-height: 340px; }
+      .slide-card { min-height: 300px; padding: 20px; }
     }
 
     @media (max-width: 480px) {
-      .view { width: calc(100% - 16px); margin-top: 14px; }
-      .card { padding: 16px; border-radius: 20px; }
+      .view { width: calc(100% - 14px); margin-top: 12px; }
+      .card { padding: 15px; border-radius: 24px; }
       .stat-grid, .achievements-grid, .courses-grid, .select-grid { grid-template-columns: 1fr; }
-      .btn { width: 100%; justify-content: center; }
+      .btn { width: 100%; }
       .row { display: grid; }
       .card-row { flex-direction: column; align-items: flex-start; }
       .lesson-action { width: 100%; }
+      .player-nav { display: grid; }
+      .player-card { padding: 13px; }
+      .slide-card { min-height: 280px; }
+      .question-prompt { font-size: 1.16rem; }
     }
   </style>
 </head>
 <body>
   <div class="topbar">
-    <div class="brand">🌱 LearnJoy</div>
+    <div class="brand"><span class="brand-logo">🌱</span> LearnJoy</div>
     <div class="top-actions">
       <span id="streak-pill" class="pill hidden">🔥 0</span>
       <button id="btn-dashboard" class="btn btn-secondary btn-small auth-only hidden">Dashboard</button>
@@ -604,55 +841,95 @@
     </section>
 
     <section id="view-lesson" class="view hidden">
-      <div class="card">
-        <button id="btn-lesson-back" class="btn btn-secondary btn-small">← Course</button>
-        <div id="lesson-detail"></div>
+      <div class="card player-card">
+        <div class="player-top">
+          <button id="btn-lesson-back" class="icon-btn" aria-label="Back to course">←</button>
+          <div class="player-progress"><div id="lesson-progress-fill" class="player-progress-fill"></div></div>
+          <div id="lesson-count" class="muted small">1/1</div>
+        </div>
 
-        <div class="row">
+        <div id="lesson-slides" class="slides"></div>
+
+        <div class="player-nav">
+          <button id="btn-slide-prev" class="btn btn-secondary">Back</button>
+          <button id="btn-slide-next" class="btn btn-primary">Next</button>
+        </div>
+
+        <div class="lesson-actions row">
           <button id="btn-complete-lesson" class="btn btn-primary">Complete Lesson</button>
           <button id="btn-take-quiz" class="btn btn-secondary">Take Quiz</button>
         </div>
 
-        <div class="subcard">
-          <h3>AI Tutor</h3>
-          <div id="tutor-messages" class="tutor-messages"></div>
-          <div class="row">
-            <input id="tutor-input" placeholder="Ask about this lesson...">
-            <button id="btn-tutor-send" class="btn btn-primary">Send</button>
+        <div class="subcard tutor-card">
+          <button id="tutor-toggle" class="tutor-toggle" type="button">
+            <span>💬 AI Tutor</span>
+            <span id="tutor-chevron">▾</span>
+          </button>
+          <div id="tutor-body" class="tutor-body hidden">
+            <div id="tutor-messages" class="tutor-messages"></div>
+            <div class="row">
+              <input id="tutor-input" placeholder="Ask about this lesson...">
+              <button id="btn-tutor-send" class="btn btn-primary">Send</button>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <section id="view-quiz" class="view hidden">
-      <div class="card">
-        <button id="btn-quiz-back" class="btn btn-secondary btn-small">← Lesson</button>
-        <div id="quiz-detail"></div>
+      <div class="card player-card">
+        <div class="player-top">
+          <button id="btn-quiz-back" class="icon-btn" aria-label="Back to lesson">←</button>
+          <div class="player-progress"><div id="quiz-progress-fill" class="player-progress-fill"></div></div>
+          <div id="quiz-count" class="muted small">1/5</div>
+        </div>
+
+        <div id="quiz-slide" class="slides"></div>
+        <div id="quiz-feedback" class="quiz-feedback hidden"></div>
+
+        <div class="player-nav" id="quiz-nav">
+          <span></span>
+          <span style="display:flex; gap:12px;">
+            <button id="btn-quiz-check" class="btn btn-primary" disabled>Check</button>
+            <button id="btn-quiz-next" class="btn btn-primary hidden">Continue</button>
+          </span>
+        </div>
       </div>
     </section>
   </main>
 
-  <div id="loading" class="loading hidden">
+  <div id="loading" class="loading">
     <div class="loading-inner">
-      <div class="spinner"></div>
+      <div class="loading-logo">🌱</div>
       <div id="loading-text">Loading...</div>
+      <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+      <div id="loading-tip" class="muted tiny"></div>
     </div>
   </div>
 
   <div id="toast" class="toast"></div>
 
   <script>
-    const CONFIG = { API_URL: "https://script.google.com/macros/s/AKfycbygdiaMdQQe8T3_OD2RTLghtXlUP6wE_JdWhZmNJgW7CEiPf6pJpVizk5pDXcGk0yuYQA/exec" };
+    const CONFIG = { API_URL: "https://script.google.com/macros/s/AKfycbyEmOJ3MLiIMlekn3F9_D1sjd6WF4ciqkp9uVP12kTTPztzXIoKbEbVg4z1Gt1J-JspOg/exec" };
 
     var state = {
       user: null,
       dashboard: null,
       course: null,
       lesson: null,
+      slides: [],
+      slideIndex: 0,
+      noteContent: '',
       quiz: null,
+      quizIndex: 0,
+      quizAnswers: [],
+      quizChecked: [],
+      quizLocalResults: [],
       quizResults: null,
       lastScore: null,
-      review: null
+      review: null,
+      touchStartX: 0,
+      quizTouchStartX: 0
     };
 
     function $(id) { return document.getElementById(id); }
@@ -669,7 +946,13 @@
 
       var token = lsGet('lj_token');
       if (token) {
-        showLoading('Loading your dashboard...');
+        var savedUser = parseJson(lsGet('lj_user'), null);
+        if (savedUser) {
+          state.user = savedUser;
+          updateTopbar(savedUser, savedUser.streak || 0);
+        }
+        showView('dashboard');
+        renderDashboardSkeleton();
         api('getDashboard').then(function (res) {
           afterAuth(res.user, res);
         }).catch(function (err) {
@@ -681,6 +964,10 @@
       } else {
         showView('login');
       }
+    }
+
+    function parseJson(value, fallback) {
+      try { return JSON.parse(value); } catch (e) { return fallback; }
     }
 
     function api(action, params, noAuth) {
@@ -724,13 +1011,45 @@
       window.scrollTo(0, 0);
     }
 
+    var loadingShowTimer = null;
+    var loadingTipTimer = null;
+    var loadingTipInterval = null;
+
     function showLoading(text) {
+      clearTimeout(loadingShowTimer);
+      clearTimeout(loadingTipTimer);
+      clearInterval(loadingTipInterval);
+
       $('loading-text').textContent = text || 'Loading...';
-      $('loading').classList.remove('hidden');
+      $('loading-tip').textContent = '';
+
+      loadingShowTimer = setTimeout(function () {
+        $('loading').classList.add('show');
+        document.body.classList.add('busy');
+      }, 180);
+
+      loadingTipTimer = setTimeout(function () {
+        var tips = [
+          'Building bite-sized steps...',
+          'Polishing the cards...',
+          'Asking the AI nicely...',
+          'Almost there...'
+        ];
+        var i = 0;
+        $('loading-tip').textContent = tips[i];
+        loadingTipInterval = setInterval(function () {
+          i = (i + 1) % tips.length;
+          $('loading-tip').textContent = tips[i];
+        }, 1500);
+      }, 1100);
     }
 
     function hideLoading() {
-      $('loading').classList.add('hidden');
+      clearTimeout(loadingShowTimer);
+      clearTimeout(loadingTipTimer);
+      clearInterval(loadingTipInterval);
+      $('loading').classList.remove('show');
+      document.body.classList.remove('busy');
     }
 
     var toastTimer = null;
@@ -760,13 +1079,6 @@
       return esc(v).replace(/\n/g, '<br>');
     }
 
-    function listHtml(items, emptyText) {
-      if (!items || !items.length) return emptyBox(emptyText || 'Nothing here yet.');
-      return '<ul class="checklist">' + items.map(function (item) {
-        return '<li>' + textHtml(item) + '</li>';
-      }).join('') + '</ul>';
-    }
-
     function emptyBox(text) {
       return '<div class="empty">' + esc(text) + '</div>';
     }
@@ -789,6 +1101,80 @@
 
     function lsDel(key) {
       try { localStorage.removeItem(key); } catch (e) {}
+    }
+
+    function skeletonBlock(height, radius) {
+      return '<div class="skeleton" style="height:' + Number(height || 16) + 'px;border-radius:' + Number(radius || 14) + 'px;"></div>';
+    }
+
+    function skeletonLines(count, heights) {
+      var out = '';
+      for (var i = 0; i < count; i++) {
+        out += '<div style="margin:10px 0;">' + skeletonBlock(heights || 16, 12) + '</div>';
+      }
+      return out;
+    }
+
+    function renderDashboardSkeleton() {
+      $('welcome-card').innerHTML =
+        '<div style="display:grid; gap:12px;">' +
+          skeletonBlock(34, 16) +
+          skeletonBlock(18, 12) +
+          '<div class="row">' + skeletonBlock(44, 16) + skeletonBlock(44, 16) + '</div>' +
+        '</div>';
+
+      $('stats-grid').innerHTML = [1, 2, 3, 4].map(function () {
+        return '<div class="card stat-card">' + skeletonBlock(38, 14) + '<div style="margin-top:10px;">' + skeletonBlock(14, 10) + '</div></div>';
+      }).join('');
+
+      $('achievements-grid').innerHTML = [1, 2, 3, 4].map(function () {
+        return '<div class="badge-card">' + skeletonBlock(42, 16) + '<div style="margin-top:10px;">' + skeletonBlock(14, 10) + '</div></div>';
+      }).join('');
+
+      $('courses-grid').innerHTML = [1, 2, 3].map(function () {
+        return '<div class="course-card">' + skeletonBlock(24, 12) + '<div style="margin:12px 0;">' + skeletonBlock(14, 10) + '</div>' + skeletonBlock(14, 999) + '</div>';
+      }).join('');
+
+      $('recent-scores').innerHTML = skeletonLines(3, 18);
+    }
+
+    function renderCourseSkeleton() {
+      $('course-detail').innerHTML =
+        '<div style="display:grid; gap:14px;">' +
+          skeletonBlock(38, 16) +
+          skeletonLines(2, 16) +
+          '<div class="row">' + skeletonBlock(34, 999) + skeletonBlock(34, 999) + skeletonBlock(34, 999) + '</div>' +
+          skeletonBlock(16, 999) +
+          skeletonBlock(70, 22) +
+          skeletonBlock(70, 22) +
+          skeletonBlock(70, 22) +
+        '</div>';
+    }
+
+    function renderLessonSkeleton() {
+      $('lesson-progress-fill').style.width = '18%';
+      $('lesson-count').textContent = '...';
+      $('lesson-slides').innerHTML =
+        '<div class="slide-card">' +
+          skeletonBlock(68, 24) +
+          '<div style="margin:14px 0;">' + skeletonBlock(30, 14) + '</div>' +
+          skeletonLines(5, 16) +
+        '</div>';
+    }
+
+    function renderQuizSkeleton() {
+      $('quiz-progress-fill').style.width = '18%';
+      $('quiz-count').textContent = '...';
+      $('quiz-slide').innerHTML =
+        '<div class="slide-card">' +
+          skeletonBlock(18, 12) +
+          '<div style="margin:14px 0;">' + skeletonBlock(34, 16) + '</div>' +
+          skeletonBlock(54, 18) +
+          '<div style="margin:10px 0;">' + skeletonBlock(54, 18) + '</div>' +
+          skeletonBlock(54, 18) +
+        '</div>';
+      $('quiz-feedback').classList.add('hidden');
+      $('quiz-nav').classList.add('hidden');
     }
 
     function initTheme() {
@@ -833,7 +1219,7 @@
       api('getConfig', {}, true).then(function (res) {
         if (res && res.allowRegister === false) $('btn-register').classList.add('hidden');
         else $('btn-register').classList.remove('hidden');
-      }).catch(function (err) {
+      }).catch(function () {
         if (String(CONFIG.API_URL).indexOf('PASTE_YOUR') !== -1) {
           showToast('Set CONFIG.API_URL to your Apps Script /exec URL', 'error');
         }
@@ -884,10 +1270,19 @@
         dashboard: null,
         course: null,
         lesson: null,
+        slides: [],
+        slideIndex: 0,
+        noteContent: '',
         quiz: null,
+        quizIndex: 0,
+        quizAnswers: [],
+        quizChecked: [],
+        quizLocalResults: [],
         quizResults: null,
         lastScore: null,
-        review: null
+        review: null,
+        touchStartX: 0,
+        quizTouchStartX: 0
       };
       updateTopbar(null, 0);
       showView('login');
@@ -905,12 +1300,22 @@
     }
 
     function refreshDashboard() {
-      showLoading('Refreshing dashboard...');
+      showView('dashboard');
+      renderDashboardSkeleton();
       api('getDashboard').then(function (res) {
         afterAuth(res.user, res);
       }).catch(function (err) {
-        hideLoading();
         showToast(err.message, 'error');
+        renderDashboard(state.dashboard || {
+          user: state.user || {},
+          courses: [],
+          completedLessons: 0,
+          averageScore: 0,
+          streak: 0,
+          recentScores: [],
+          continueCourseId: '',
+          achievements: []
+        });
       });
     }
 
@@ -1043,14 +1448,14 @@
     }
 
     function openCourse(courseId) {
-      showLoading('Opening course...');
+      showView('course');
+      renderCourseSkeleton();
+
       api('getCourseById', { courseId: courseId }).then(function (res) {
         state.course = res.course;
         renderCourse(res.course);
-        showView('course');
-        hideLoading();
       }).catch(function (err) {
-        hideLoading();
+        $('course-detail').innerHTML = emptyBox(err.message);
         showToast(err.message, 'error');
       });
     }
@@ -1114,16 +1519,16 @@
     }
 
     function openLesson(courseId, moduleIndex, lessonIndex) {
-      showLoading('Preparing lesson...');
+      showView('lesson');
+      renderLessonSkeleton();
+
       api('generateLesson', { courseId: courseId, moduleIndex: moduleIndex, lessonIndex: lessonIndex })
         .then(function (res) {
           state.lesson = res.lesson;
           renderLesson(res.lesson);
-          showView('lesson');
-          hideLoading();
         })
         .catch(function (err) {
-          hideLoading();
+          $('lesson-slides').innerHTML = '<div class="slide-card">' + emptyBox(err.message) + '</div>';
           showToast(err.message, 'error');
         });
     }
@@ -1134,58 +1539,215 @@
         else showView('dashboard');
       });
 
+      $('btn-slide-prev').addEventListener('click', prevSlide);
+      $('btn-slide-next').addEventListener('click', nextSlide);
+
       $('btn-complete-lesson').addEventListener('click', completeLesson);
       $('btn-take-quiz').addEventListener('click', takeQuiz);
-      $('btn-tutor-send').addEventListener('click', sendTutor);
 
+      $('btn-tutor-send').addEventListener('click', sendTutor);
       $('tutor-input').addEventListener('keydown', function (e) {
         if (e.key === 'Enter') sendTutor();
       });
+
+      $('tutor-toggle').addEventListener('click', function () {
+        $('tutor-body').classList.toggle('hidden');
+        $('tutor-chevron').textContent = $('tutor-body').classList.contains('hidden') ? '▾' : '▴';
+      });
+
+      $('lesson-slides').addEventListener('touchstart', function (e) {
+        state.touchStartX = e.changedTouches[0].clientX;
+      }, { passive: true });
+
+      $('lesson-slides').addEventListener('touchend', function (e) {
+        if (e.target.closest('input, textarea, select, button, label')) return;
+        var dx = e.changedTouches[0].clientX - state.touchStartX;
+        if (dx < -50) nextSlide();
+        if (dx > 50) prevSlide();
+      }, { passive: true });
+
+      document.addEventListener('keydown', function (e) {
+        if ($('view-lesson').classList.contains('hidden')) return;
+        if (e.target.closest('input, textarea, select')) return;
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') prevSlide();
+      });
     }
 
-    function renderLesson(l) {
+    function buildLessonSlides(l) {
       var content = l.content || {};
       var exercise = content.exercise || {};
+      var slides = [];
 
-      var html =
-        '<h1>' + esc(l.lessonTitle) + '</h1>' +
-        '<p class="muted">' + esc(l.moduleTitle) + '</p>' +
-        '<div class="lesson-section"><h2>Introduction</h2><div>' + textHtml(content.introduction) + '</div></div>' +
-        '<div class="lesson-section"><h2>Key Points</h2>' + listHtml(content.keyPoints, 'No key points') + '</div>' +
-        '<div class="lesson-section"><h2>Examples</h2>' + listHtml(content.examples, 'No examples') + '</div>' +
-        '<div class="lesson-section"><h2>Common Mistakes</h2>' + listHtml(content.commonMistakes, 'No common mistakes') + '</div>' +
-        '<div class="lesson-section"><h2>Practice Exercise</h2>' +
-          '<div>' + textHtml(exercise.prompt) + '</div>' +
+      slides.push({
+        kind: 'intro',
+        emoji: '📘',
+        title: 'Lesson',
+        html:
+          '<h1>' + esc(l.lessonTitle) + '</h1>' +
+          '<p class="muted">' + esc(l.moduleTitle) + '</p>' +
+          '<div class="chips"><span class="chip">⏱ ' + esc(String(content.estimatedMinutes || 7)) + ' min</span>' +
+          (l.completed ? '<span class="chip">✅ Completed</span>' : '') + '</div>' +
+          '<div>' + textHtml(content.introduction || '') + '</div>'
+      });
+
+      (content.keyPoints || []).forEach(function (point, i) {
+        slides.push({
+          kind: 'key',
+          emoji: '💡',
+          title: 'Key point ' + (i + 1) + ' of ' + (content.keyPoints || []).length,
+          html: '<div class="big-text">' + textHtml(point) + '</div>'
+        });
+      });
+
+      (content.examples || []).forEach(function (example, i) {
+        slides.push({
+          kind: 'example',
+          emoji: '🧪',
+          title: 'Example ' + (i + 1) + ' of ' + (content.examples || []).length,
+          html: '<div>' + textHtml(example) + '</div>'
+        });
+      });
+
+      (content.commonMistakes || []).forEach(function (mistake, i) {
+        slides.push({
+          kind: 'mistake',
+          emoji: '⚠️',
+          title: 'Watch out ' + (i + 1) + ' of ' + (content.commonMistakes || []).length,
+          html: '<div class="big-text">' + textHtml(mistake) + '</div>'
+        });
+      });
+
+      slides.push({
+        kind: 'exercise',
+        emoji: '🛠️',
+        title: 'Practice exercise',
+        html:
+          '<div class="big-text">' + textHtml(exercise.prompt || 'Try a short practice exercise.') + '</div>' +
           '<div class="row">' +
             '<button class="btn btn-small btn-secondary" id="btn-show-hint">Show Hint</button>' +
             '<button class="btn btn-small btn-secondary" id="btn-show-solution">Show Solution</button>' +
           '</div>' +
-          '<div id="exercise-hint" class="callout hidden">' + textHtml(exercise.hint) + '</div>' +
-          '<div id="exercise-solution" class="callout hidden">' + textHtml(exercise.solution) + '</div>' +
-        '</div>' +
-        '<div class="lesson-section"><h2>Summary</h2><div>' + textHtml(content.summary) + '</div></div>' +
-        '<div class="lesson-section"><h2>My Note</h2>' +
-          '<textarea id="note-content" placeholder="Write a personal note about this lesson..."></textarea>' +
-          '<div class="row"><button class="btn btn-small btn-secondary" id="btn-save-note">Save Note</button></div>' +
-        '</div>';
+          '<div id="exercise-hint" class="callout hidden">' + textHtml(exercise.hint || '') + '</div>' +
+          '<div id="exercise-solution" class="callout hidden">' + textHtml(exercise.solution || '') + '</div>'
+      });
 
-      $('lesson-detail').innerHTML = html;
-
-      $('btn-show-hint').addEventListener('click', function () { toggleHidden('exercise-hint'); });
-      $('btn-show-solution').addEventListener('click', function () { toggleHidden('exercise-solution'); });
-      $('btn-save-note').addEventListener('click', saveNote);
-
-      var completeBtn = $('btn-complete-lesson');
-      if (l.completed) {
-        completeBtn.textContent = 'Completed ✅';
-        completeBtn.disabled = true;
-      } else {
-        completeBtn.textContent = 'Complete Lesson';
-        completeBtn.disabled = false;
+      if (content.summary) {
+        slides.push({
+          kind: 'summary',
+          emoji: '🎯',
+          title: 'Summary',
+          html: '<div>' + textHtml(content.summary) + '</div>'
+        });
       }
 
+      slides.push({
+        kind: 'note',
+        emoji: '✍️',
+        title: 'Your note',
+        html:
+          '<p class="muted">Write a tiny note to future you. It saves automatically to this lesson.</p>' +
+          '<textarea id="note-content" placeholder="What do you want to remember?">' + esc(state.noteContent || '') + '</textarea>' +
+          '<div class="row"><button class="btn btn-small btn-secondary" id="btn-save-note">Save Note</button></div>'
+      });
+
+      slides.push({
+        kind: 'finish',
+        emoji: '🎉',
+        title: 'Ready to lock it in?',
+        html:
+          '<div class="big-text">Nice work getting through the lesson. You can mark it complete or jump into the quiz.</div>' +
+          '<div class="row">' +
+            '<button class="btn btn-primary" id="slide-complete">' + (l.completed ? 'Completed ✅' : 'Complete Lesson') + '</button>' +
+            '<button class="btn btn-secondary" id="slide-quiz">Take Quiz</button>' +
+          '</div>'
+      });
+
+      return slides;
+    }
+
+    function renderLesson(l) {
+      state.lesson = l;
+      state.slides = buildLessonSlides(l);
+      state.slideIndex = 0;
+      state.noteContent = '';
+
+      renderSlide();
+      updateLessonActions();
       resetTutor();
       loadNote(l.lessonId);
+
+      $('tutor-body').classList.add('hidden');
+      $('tutor-chevron').textContent = '▾';
+    }
+
+    function renderSlide() {
+      if (!state.slides.length) return;
+
+      var slide = state.slides[state.slideIndex];
+      var total = state.slides.length;
+
+      var html =
+        '<div class="slide-card slide-' + esc(slide.kind) + '">' +
+          '<div class="slide-emoji">' + slide.emoji + '</div>' +
+          '<div class="slide-kicker muted">' + esc(slide.title) + '</div>' +
+          '<div class="slide-body">' + slide.html + '</div>' +
+        '</div>';
+
+      $('lesson-slides').innerHTML = html;
+
+      $('lesson-progress-fill').style.width = (((state.slideIndex + 1) / total) * 100) + '%';
+      $('lesson-count').textContent = (state.slideIndex + 1) + '/' + total;
+
+      $('btn-slide-prev').disabled = state.slideIndex === 0;
+      $('btn-slide-next').textContent = state.slideIndex === total - 1
+        ? (state.lesson && state.lesson.completed ? 'Take Quiz' : 'Finish')
+        : 'Next';
+
+      if (slide.kind === 'exercise') {
+        $('btn-show-hint').addEventListener('click', function () { toggleHidden('exercise-hint'); });
+        $('btn-show-solution').addEventListener('click', function () { toggleHidden('exercise-solution'); });
+      }
+
+      if (slide.kind === 'note') {
+        var noteEl = $('note-content');
+        if (noteEl) {
+          noteEl.value = state.noteContent || '';
+          noteEl.addEventListener('input', function () {
+            state.noteContent = noteEl.value;
+          });
+        }
+        var saveBtn = $('btn-save-note');
+        if (saveBtn) saveBtn.addEventListener('click', saveNote);
+      }
+
+      if (slide.kind === 'finish') {
+        var completeBtn = $('slide-complete');
+        var quizBtn = $('slide-quiz');
+        if (completeBtn) {
+          completeBtn.disabled = !!(state.lesson && state.lesson.completed);
+          completeBtn.addEventListener('click', completeLesson);
+        }
+        if (quizBtn) quizBtn.addEventListener('click', takeQuiz);
+      }
+    }
+
+    function nextSlide() {
+      if (!state.slides.length) return;
+      if (state.slideIndex < state.slides.length - 1) {
+        state.slideIndex++;
+        renderSlide();
+      } else {
+        if (state.lesson && !state.lesson.completed) completeLesson();
+        else takeQuiz();
+      }
+    }
+
+    function prevSlide() {
+      if (state.slideIndex > 0) {
+        state.slideIndex--;
+        renderSlide();
+      }
     }
 
     function toggleHidden(id) {
@@ -1193,66 +1755,100 @@
       if (el) el.classList.toggle('hidden');
     }
 
+    function updateLessonActions() {
+      var completeBtn = $('btn-complete-lesson');
+      if (!completeBtn) return;
+
+      if (state.lesson && state.lesson.completed) {
+        completeBtn.textContent = 'Completed ✅';
+        completeBtn.disabled = true;
+      } else {
+        completeBtn.textContent = 'Complete Lesson';
+        completeBtn.disabled = false;
+      }
+      completeBtn.classList.remove('is-loading');
+      delete completeBtn.dataset.origText;
+    }
+
+    function setButtonLoading_(id, loading, text) {
+      var btn = $(id);
+      if (!btn) return;
+
+      if (loading) {
+        btn.dataset.origText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = text || 'Working...';
+      } else {
+        btn.disabled = false;
+        if (btn.dataset.origText) btn.textContent = btn.dataset.origText;
+        delete btn.dataset.origText;
+      }
+    }
+
     function loadNote(lessonId) {
       api('getNotes', { lessonId: lessonId }).then(function (res) {
-        var noteArea = $('note-content');
-        if (noteArea && res.notes && res.notes.length) {
-          noteArea.value = res.notes[0].content || '';
-        }
+        state.noteContent = res.notes && res.notes.length ? (res.notes[0].content || '') : '';
+        var el = $('note-content');
+        if (el) el.value = state.noteContent;
       }).catch(function () {});
     }
 
     function saveNote() {
       if (!state.lesson) return;
-      var content = $('note-content').value;
-      api('saveNote', { lessonId: state.lesson.lessonId, content: content }).then(function () {
-        showToast('Note saved');
-      }).catch(function (err) {
-        showToast(err.message, 'error');
-      });
+      setButtonLoading_('btn-save-note', true, 'Saving...');
+      api('saveNote', { lessonId: state.lesson.lessonId, content: state.noteContent || '' })
+        .then(function () {
+          setButtonLoading_('btn-save-note', false);
+          showToast('Note saved');
+        })
+        .catch(function (err) {
+          setButtonLoading_('btn-save-note', false);
+          showToast(err.message, 'error');
+        });
     }
 
     function completeLesson() {
-      if (!state.lesson) return;
-      showLoading('Saving progress...');
+      if (!state.lesson || state.lesson.completed) return;
+
+      setButtonLoading_('btn-complete-lesson', true, 'Saving...');
+      setButtonLoading_('slide-complete', true, 'Saving...');
+
       api('markLessonComplete', { courseId: state.lesson.courseId, lessonId: state.lesson.lessonId })
         .then(function (res) {
-          hideLoading();
           state.lesson.completed = true;
-          var btn = $('btn-complete-lesson');
-          btn.textContent = 'Completed ✅';
-          btn.disabled = true;
 
           if (state.user) {
             state.user.streak = res.streak;
             state.user.totalLessons = res.totalLessons;
+            lsSet('lj_user', JSON.stringify(state.user));
           }
+
           updateTopbar(state.user, res.streak);
+          updateLessonActions();
+          renderSlide();
 
           showToast('Lesson completed. Nice work!');
           if (res.courseCompleted) showToast('🏆 Course complete! Amazing!');
         })
         .catch(function (err) {
-          hideLoading();
+          setButtonLoading_('btn-complete-lesson', false);
+          setButtonLoading_('slide-complete', false);
           showToast(err.message, 'error');
         });
     }
 
     function takeQuiz() {
       if (!state.lesson) return;
-      showLoading('Preparing quiz...');
+
+      showView('quiz');
+      renderQuizSkeleton();
+
       api('generateQuiz', { courseId: state.lesson.courseId, lessonId: state.lesson.lessonId })
         .then(function (res) {
-          state.quiz = res.quiz;
-          state.quizResults = null;
-          state.lastScore = null;
-          state.review = null;
-          renderQuiz();
-          showView('quiz');
-          hideLoading();
+          startQuiz(res.quiz);
         })
         .catch(function (err) {
-          hideLoading();
+          $('quiz-slide').innerHTML = '<div class="slide-card">' + emptyBox(err.message) + '</div>';
           showToast(err.message, 'error');
         });
     }
@@ -1298,113 +1894,252 @@
     function bindQuiz() {
       $('btn-quiz-back').addEventListener('click', function () {
         if (state.lesson) {
-          renderLesson(state.lesson);
+          if (!state.slides || !state.slides.length) renderLesson(state.lesson);
           showView('lesson');
         } else {
           showView('dashboard');
         }
       });
+
+      $('btn-quiz-check').addEventListener('click', checkCurrentQuestion);
+      $('btn-quiz-next').addEventListener('click', continueQuiz);
+
+      $('quiz-slide').addEventListener('touchstart', function (e) {
+        state.quizTouchStartX = e.changedTouches[0].clientX;
+      }, { passive: true });
+
+      $('quiz-slide').addEventListener('touchend', function (e) {
+        if (e.target.closest('input, textarea, select, button, label')) return;
+        var dx = e.changedTouches[0].clientX - state.quizTouchStartX;
+        if (dx > 50 && state.quizIndex > 0) {
+          state.quizIndex--;
+          renderQuizQuestion();
+        }
+        if (dx < -50 && state.quizChecked[state.quizIndex]) {
+          continueQuiz();
+        }
+      }, { passive: true });
     }
 
-    function renderQuiz() {
-      var q = state.quiz;
-      if (!q || !q.questions) {
-        $('quiz-detail').innerHTML = emptyBox('No quiz available.');
+    function startQuiz(quiz) {
+      state.quiz = quiz;
+      state.quizIndex = 0;
+      state.quizAnswers = (quiz.questions || []).map(function () { return null; });
+      state.quizChecked = (quiz.questions || []).map(function () { return false; });
+      state.quizLocalResults = (quiz.questions || []).map(function () { return null; });
+      state.quizResults = null;
+      state.lastScore = null;
+      state.review = null;
+
+      $('quiz-nav').classList.remove('hidden');
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+      if (!state.quiz || !state.quiz.questions || !state.quiz.questions.length) {
+        $('quiz-slide').innerHTML = '<div class="slide-card">' + emptyBox('No quiz available.') + '</div>';
         return;
       }
 
-      var html = '<h1>Quiz</h1><p class="muted">' + esc(state.lesson ? state.lesson.lessonTitle : '') + '</p><form id="quiz-form">';
+      var i = state.quizIndex;
+      var q = state.quiz.questions[i];
+      var total = state.quiz.questions.length;
+      var checked = state.quizChecked[i];
+      var answer = state.quizAnswers[i];
+      var localResult = state.quizLocalResults[i];
 
-      q.questions.forEach(function (question, idx) {
-        html += '<div class="subcard question-card"><h3>' + esc(String(idx + 1) + '. ' + question.prompt) + '</h3>';
+      var html =
+        '<div class="slide-card quiz-question">' +
+          '<div class="slide-kicker muted">Question ' + (i + 1) + ' of ' + total + '</div>' +
+          '<h2 class="question-prompt">' + esc(q.prompt) + '</h2>';
 
-        if (question.type === 'mc') {
-          html += '<div class="options">';
-          question.options.forEach(function (opt, oi) {
-            var id = 'opt_' + question.id + '_' + oi;
-            html += '<label class="option" for="' + esc(id) + '">' +
-              '<input type="radio" id="' + esc(id) + '" name="' + esc(question.id) + '" value="' + esc(opt) + '"> ' +
-              '<span>' + esc(opt) + '</span></label>';
-          });
-          html += '</div>';
-        } else if (question.type === 'tf') {
-          html += '<div class="options">' +
-            '<label class="option"><input type="radio" name="' + esc(question.id) + '" value="true"> <span>True</span></label>' +
-            '<label class="option"><input type="radio" name="' + esc(question.id) + '" value="false"> <span>False</span></label>' +
-          '</div>';
-        } else {
-          html += '<input class="short-answer" name="' + esc(question.id) + '" placeholder="Your answer">';
+      if (q.type === 'mc') {
+        html += '<div class="options">';
+        q.options.forEach(function (opt) {
+          var selected = answer === opt;
+          var cls = 'option';
+          if (selected) cls += ' selected';
+          if (checked) {
+            cls += ' disabled';
+            if (opt === q.answer) cls += ' correct';
+            else if (selected) cls += ' incorrect';
+          }
+
+          html +=
+            '<label class="' + cls + '">' +
+              '<input type="radio" name="quiz-option" value="' + esc(opt) + '" ' + (selected ? 'checked' : '') + (checked ? ' disabled' : '') + '>' +
+              '<span>' + esc(opt) + '</span>' +
+            '</label>';
+        });
+        html += '</div>';
+      } else if (q.type === 'tf') {
+        var trueSelected = answer === 'true';
+        var falseSelected = answer === 'false';
+        var correctBool = normalizeBoolLocal(q.answer);
+
+        var trueCls = 'option' + (trueSelected ? ' selected' : '');
+        var falseCls = 'option' + (falseSelected ? ' selected' : '');
+
+        if (checked) {
+          trueCls += ' disabled';
+          falseCls += ' disabled';
+          if (correctBool) trueCls += ' correct';
+          else falseCls += ' correct';
+          if (trueSelected && !correctBool) trueCls += ' incorrect';
+          if (falseSelected && correctBool) falseCls += ' incorrect';
         }
 
-        html += '</div>';
-      });
+        html +=
+          '<div class="options">' +
+            '<label class="' + trueCls + '"><input type="radio" name="quiz-option" value="true" ' + (trueSelected ? 'checked' : '') + (checked ? ' disabled' : '') + '> <span>True</span></label>' +
+            '<label class="' + falseCls + '"><input type="radio" name="quiz-option" value="false" ' + (falseSelected ? 'checked' : '') + (checked ? ' disabled' : '') + '> <span>False</span></label>' +
+          '</div>';
+      } else {
+        var shortCls = 'short-answer';
+        if (checked && localResult) shortCls += localResult.correct ? ' correct' : ' incorrect';
+        html += '<input class="' + shortCls + '" id="quiz-short" placeholder="Your answer" value="' + esc(answer || '') + '" ' + (checked ? ' disabled' : '') + '>';
+      }
 
-      html += '<button type="submit" class="btn btn-primary">Submit Quiz</button></form>';
-      $('quiz-detail').innerHTML = html;
+      html += '</div>';
 
-      $('quiz-form').addEventListener('submit', submitQuizForm);
+      $('quiz-slide').innerHTML = html;
+      $('quiz-progress-fill').style.width = (((i + 1) / total) * 100) + '%';
+      $('quiz-count').textContent = (i + 1) + '/' + total;
+
+      if (!checked) {
+        $('quiz-feedback').classList.add('hidden');
+        $('btn-quiz-check').classList.remove('hidden');
+        $('btn-quiz-next').classList.add('hidden');
+        $('btn-quiz-check').disabled = !hasCurrentAnswer();
+
+        var radios = document.querySelectorAll('input[name="quiz-option"]');
+        radios.forEach(function (radio) {
+          radio.addEventListener('change', function () {
+            state.quizAnswers[i] = radio.value;
+            document.querySelectorAll('.option').forEach(function (el) { el.classList.remove('selected'); });
+            if (radio.closest('.option')) radio.closest('.option').classList.add('selected');
+            $('btn-quiz-check').disabled = false;
+          });
+        });
+
+        var short = $('quiz-short');
+        if (short) {
+          short.addEventListener('input', function () {
+            state.quizAnswers[i] = short.value;
+            $('btn-quiz-check').disabled = !short.value.trim();
+          });
+          short.focus();
+        }
+      } else {
+        showQuizFeedback(localResult);
+        $('btn-quiz-check').classList.add('hidden');
+        $('btn-quiz-next').classList.remove('hidden');
+        $('btn-quiz-next').textContent = i === total - 1 ? 'See Results' : 'Continue';
+      }
     }
 
-    function submitQuizForm(e) {
-      e.preventDefault();
-      if (!state.quiz || !state.lesson) return;
+    function hasCurrentAnswer() {
+      var a = state.quizAnswers[state.quizIndex];
+      return a !== null && a !== undefined && String(a).trim() !== '';
+    }
 
-      var answers = [];
-      state.quiz.questions.forEach(function (q) {
-        var answer = '';
-        if (q.type === 'short') {
-          var input = document.querySelector('input[name="' + q.id + '"]');
-          answer = input ? input.value : '';
-        } else {
-          var checked = document.querySelector('input[name="' + q.id + '"]:checked');
-          answer = checked ? checked.value : '';
-        }
-        answers.push({ questionId: q.id, answer: answer });
+    function checkCurrentQuestion() {
+      var i = state.quizIndex;
+      if (!state.quiz || state.quizChecked[i]) return;
+      if (!hasCurrentAnswer()) return;
+
+      var q = state.quiz.questions[i];
+      var answer = state.quizAnswers[i];
+      var result = gradeQuestionLocal(q, answer);
+
+      state.quizChecked[i] = true;
+      state.quizLocalResults[i] = result;
+
+      renderQuizQuestion();
+    }
+
+    function continueQuiz() {
+      var total = state.quiz.questions.length;
+      if (state.quizIndex < total - 1) {
+        state.quizIndex++;
+        renderQuizQuestion();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function showQuizFeedback(result) {
+      var fb = $('quiz-feedback');
+      fb.className = 'quiz-feedback ' + (result.correct ? 'correct' : 'incorrect');
+      fb.innerHTML =
+        '<div>' + (result.correct ? '✅ Correct!' : '❌ Not quite') + '</div>' +
+        (!result.correct ? '<div class="small" style="margin-top:6px;"><strong>Answer:</strong> ' + textHtml(result.correctAnswer || '—') + '</div>' : '') +
+        '<div class="feedback-explanation">' + textHtml(result.explanation || '') + '</div>';
+      fb.classList.remove('hidden');
+    }
+
+    function finishQuiz() {
+      $('quiz-nav').classList.add('hidden');
+      $('quiz-feedback').classList.add('hidden');
+      renderQuizSkeleton();
+
+      var answers = state.quiz.questions.map(function (q, i) {
+        return { questionId: q.id, answer: state.quizAnswers[i] === null ? '' : state.quizAnswers[i] };
       });
 
-      showLoading('Checking quiz...');
       api('submitQuiz', { courseId: state.lesson.courseId, lessonId: state.lesson.lessonId, answers: answers })
         .then(function (res) {
-          hideLoading();
-          state.quizResults = res.results;
-          state.lastScore = res.score;
-          renderQuizResults(res);
+          renderQuizFinal(res);
         })
         .catch(function (err) {
-          hideLoading();
+          $('quiz-slide').innerHTML = '<div class="slide-card">' + emptyBox(err.message) + '</div>';
+          $('quiz-nav').classList.remove('hidden');
           showToast(err.message, 'error');
         });
     }
 
-    function renderQuizResults(res) {
+    function renderQuizFinal(res) {
+      state.quizResults = res.results;
+      state.lastScore = res.score;
+
       var html =
-        '<div class="score-card"><div class="score-number">' + esc(String(res.score)) + '%</div>' +
-        '<div><strong>' + esc(String(res.correct)) + ' of ' + esc(String(res.total)) + ' correct</strong></div></div>';
+        '<div class="slide-card quiz-final">' +
+          '<div class="score-card">' +
+            '<div class="score-number">' + esc(String(res.score)) + '%</div>' +
+            '<div><strong>' + esc(String(res.correct)) + ' of ' + esc(String(res.total)) + ' correct</strong></div>' +
+          '</div>' +
+          '<h2>Question recap</h2>';
 
-      html += '<div class="results">';
-      res.results.forEach(function (r, i) {
-        var cls = r.correct ? 'result-correct' : 'result-incorrect';
-        html += '<div class="subcard result-card ' + cls + '">' +
-          '<h3>' + esc(String(i + 1) + '. ' + r.prompt) + '</h3>' +
-          '<p><strong>' + (r.correct ? '✅ Correct' : '❌ Not quite') + '</strong></p>' +
-          '<p class="small"><strong>Your answer:</strong> ' + textHtml(r.userAnswer || '—') + '</p>' +
-          '<p class="small"><strong>Answer:</strong> ' + textHtml(r.correctAnswer || '—') + '</p>' +
-          '<p class="small muted">' + textHtml(r.explanation) + '</p>' +
-        '</div>';
+      res.results.forEach(function (r) {
+        html +=
+          '<div class="result-item ' + (r.correct ? 'correct' : 'incorrect') + '">' +
+            '<div class="result-icon">' + (r.correct ? '✅' : '❌') + '</div>' +
+            '<div>' +
+              '<div class="result-prompt">' + esc(r.prompt) + '</div>' +
+              '<div class="muted small">Your answer: ' + esc(r.userAnswer || '—') + ' · Correct: ' + esc(r.correctAnswer || '—') + '</div>' +
+            '</div>' +
+          '</div>';
       });
-      html += '</div>';
 
-      html += '<div class="row">' +
-        '<button class="btn btn-secondary" id="quiz-back-lesson">Back to Lesson</button>' +
-        (res.score < 70 ? '<button class="btn btn-primary" id="btn-generate-review">Generate Review</button>' : '') +
-      '</div>';
+      html +=
+        '<div class="row">' +
+          '<button class="btn btn-secondary" id="quiz-back-lesson">Back to Lesson</button>' +
+          (res.score < 70 ? '<button class="btn btn-primary" id="btn-generate-review">Generate Review</button>' : '') +
+        '</div>' +
+        '<div id="review-area"></div>' +
+        '</div>';
 
-      html += '<div id="review-area"></div>';
-      $('quiz-detail').innerHTML = html;
+      $('quiz-slide').innerHTML = html;
+      $('quiz-count').textContent = 'Done';
+      $('quiz-progress-fill').style.width = '100%';
 
       $('quiz-back-lesson').addEventListener('click', function () {
-        renderLesson(state.lesson);
-        showView('lesson');
+        if (state.lesson) {
+          if (!state.slides || !state.slides.length) renderLesson(state.lesson);
+          showView('lesson');
+        } else {
+          showView('dashboard');
+        }
       });
 
       if (res.score < 70) {
@@ -1414,34 +2149,114 @@
 
     function generateReview() {
       if (!state.lesson) return;
-      showLoading('Creating review...');
+
+      setButtonLoading_('btn-generate-review', true, 'Creating review...');
+
       api('generateReview', { courseId: state.lesson.courseId, lessonId: state.lesson.lessonId, score: state.lastScore || 0 })
         .then(function (res) {
-          hideLoading();
+          setButtonLoading_('btn-generate-review', false);
           var review = res.review;
 
-          var html = '<div class="subcard review-card">' +
-            '<h2>Review</h2>' +
-            '<h3>Simplified Explanation</h3><div>' + textHtml(review.simplifiedExplanation) + '</div>' +
-            '<h3>Review Lesson</h3><div>' + textHtml(review.reviewLesson) + '</div>' +
-            '<h3>Extra Practice</h3>';
+          var html =
+            '<div class="subcard review-card" style="margin-top:14px;">' +
+              '<h2>Review</h2>' +
+              '<h3>Simplified Explanation</h3><div>' + textHtml(review.simplifiedExplanation) + '</div>' +
+              '<h3>Review Lesson</h3><div>' + textHtml(review.reviewLesson) + '</div>' +
+              '<h3>Extra Practice</h3>';
 
           review.practiceQuestions.forEach(function (pq, i) {
-            html += '<div class="practice-question">' +
-              '<strong>' + esc(String(i + 1) + '. ' + pq.prompt) + '</strong>' +
-              '<div class="small" style="margin-top:6px;"><strong>Answer:</strong> ' + textHtml(pq.answer) + '</div>' +
-              '<div class="small muted" style="margin-top:4px;">' + textHtml(pq.explanation) + '</div>' +
-            '</div>';
+            html +=
+              '<div class="practice-question">' +
+                '<strong>' + esc(String(i + 1) + '. ' + pq.prompt) + '</strong>' +
+                '<div class="small" style="margin-top:6px;"><strong>Answer:</strong> ' + textHtml(pq.answer) + '</div>' +
+                '<div class="small muted" style="margin-top:4px;">' + textHtml(pq.explanation) + '</div>' +
+              '</div>';
           });
 
           html += '</div>';
+
           var area = $('review-area');
           if (area) area.innerHTML = html;
         })
         .catch(function (err) {
-          hideLoading();
+          setButtonLoading_('btn-generate-review', false);
           showToast(err.message, 'error');
         });
+    }
+
+    function normalizeShortLocal(s) {
+      return String(s || '').toLowerCase().trim()
+        .replace(/[.,!?;:'"()]/g, '')
+        .replace(/\s+/g, ' ');
+    }
+
+    function normalizeOptionLocal(s) {
+      return normalizeShortLocal(s);
+    }
+
+    function normalizeBoolLocal(v) {
+      if (v === true) return true;
+      if (v === false) return false;
+      var s = String(v).trim().toLowerCase();
+      if (['true', 't', 'yes', 'y', '1'].indexOf(s) !== -1) return true;
+      if (['false', 'f', 'no', 'n', '0'].indexOf(s) !== -1) return false;
+      return false;
+    }
+
+    function resolveMcLocal(q, val) {
+      var options = q.options || [];
+      if (/^\d+$/.test(String(val).trim())) {
+        var idx = Number(val);
+        if (idx >= 0 && idx < options.length) return options[idx];
+      }
+      return String(val || '');
+    }
+
+    function gradeShortLocal(userNorm, answer) {
+      if (!userNorm) return false;
+      var alternatives = String(answer || '').split(/[|;]/);
+
+      for (var i = 0; i < alternatives.length; i++) {
+        var exp = normalizeShortLocal(alternatives[i]);
+        if (!exp) continue;
+        if (userNorm === exp) return true;
+        if (exp.length > 4 && userNorm.length >= 4) {
+          if (userNorm.indexOf(exp) !== -1 || exp.indexOf(userNorm) !== -1) return true;
+        }
+      }
+
+      return false;
+    }
+
+    function gradeQuestionLocal(q, answer) {
+      var correct = false;
+      var correctAnswer = '';
+      var userAnswer = answer;
+
+      if (q.type === 'mc') {
+        var userText = resolveMcLocal(q, answer);
+        var correctText = resolveMcLocal(q, q.answer);
+        correct = normalizeOptionLocal(userText) === normalizeOptionLocal(correctText) && normalizeOptionLocal(correctText) !== '';
+        correctAnswer = q.answer;
+        userAnswer = userText;
+      } else if (q.type === 'tf') {
+        var userBool = normalizeBoolLocal(answer);
+        var correctBool = normalizeBoolLocal(q.answer);
+        correct = userBool === correctBool;
+        correctAnswer = correctBool ? 'True' : 'False';
+        userAnswer = userBool ? 'True' : 'False';
+      } else {
+        var userNorm = normalizeShortLocal(answer);
+        correct = gradeShortLocal(userNorm, q.answer);
+        correctAnswer = q.answer;
+      }
+
+      return {
+        correct: correct,
+        userAnswer: userAnswer,
+        correctAnswer: correctAnswer,
+        explanation: q.explanation || ''
+      };
     }
 
     init();

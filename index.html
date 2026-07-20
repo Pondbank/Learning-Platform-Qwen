@@ -1,0 +1,1450 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LearnJoy — Bite-sized AI Learning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7ffe9;
+      --bg-accent: rgba(88, 204, 2, 0.16);
+      --card: rgba(255, 255, 255, 0.78);
+      --subcard: rgba(255, 255, 255, 0.62);
+      --text: #16241c;
+      --muted: #5f7166;
+      --border: rgba(22, 36, 28, 0.10);
+      --primary: #58cc02;
+      --primary-dark: #46a302;
+      --primary-soft: rgba(88, 204, 2, 0.14);
+      --danger: #ff4b4b;
+      --danger-soft: rgba(255, 75, 75, 0.12);
+      --shadow: 0 14px 40px rgba(18, 46, 22, 0.10);
+      --glass-blur: blur(16px);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b1220;
+      --bg-accent: rgba(88, 204, 2, 0.16);
+      --card: rgba(15, 23, 42, 0.72);
+      --subcard: rgba(15, 23, 42, 0.58);
+      --text: #e8eef7;
+      --muted: #9aa8bd;
+      --border: rgba(255, 255, 255, 0.12);
+      --primary-soft: rgba(88, 204, 2, 0.16);
+      --danger-soft: rgba(255, 75, 75, 0.16);
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, var(--bg-accent), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(88, 204, 2, 0.10), transparent 28%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .hidden { display: none !important; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+    }
+
+    .brand {
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      font-size: 1.15rem;
+      color: var(--primary-dark);
+      white-space: nowrap;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-weight: 800;
+      border: 1px solid rgba(88, 204, 2, 0.22);
+    }
+
+    .view {
+      width: min(1120px, calc(100% - 24px));
+      margin: 22px auto 42px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      padding: 22px;
+    }
+
+    .subcard {
+      background: var(--subcard);
+      border-radius: 20px;
+      padding: 16px;
+      border: 1px solid var(--border);
+    }
+
+    h1, h2, h3 { margin: 0 0 10px; line-height: 1.15; letter-spacing: -0.03em; }
+    h1 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+    h2 { font-size: 1.25rem; }
+    h3 { font-size: 1.02rem; }
+    p { margin: 0 0 10px; line-height: 1.55; }
+
+    .muted { color: var(--muted); }
+    .small { font-size: 0.92rem; }
+    .tiny { font-size: 0.8rem; }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+
+    .wrap { flex-wrap: wrap; }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 800;
+      border-radius: 16px;
+      padding: 12px 18px;
+      font-size: 0.98rem;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.2s ease;
+      background: var(--subcard);
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, #6ee106, var(--primary));
+      color: #08240a;
+      border: 1px solid rgba(70, 163, 2, 0.35);
+      box-shadow: 0 5px 0 var(--primary-dark);
+    }
+
+    .btn-primary:active { box-shadow: 0 2px 0 var(--primary-dark); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+    }
+
+    .btn-small {
+      padding: 9px 13px;
+      font-size: 0.88rem;
+      border-radius: 13px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--subcard);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 13px 14px;
+      font: inherit;
+      outline: none;
+      margin: 8px 0;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(88, 204, 2, 0.55);
+      box-shadow: 0 0 0 4px var(--primary-soft);
+    }
+
+    textarea { min-height: 120px; resize: vertical; }
+
+    .auth-card {
+      width: min(460px, 100%);
+      margin: 6vh auto 0;
+    }
+
+    .gradient-card {
+      background:
+        linear-gradient(135deg, rgba(88, 204, 2, 0.92), rgba(34, 197, 94, 0.88)),
+        var(--card);
+      color: #05270b;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .gradient-card .muted { color: rgba(5, 39, 11, 0.78); }
+
+    .stat-grid, .achievements-grid, .courses-grid, .select-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .achievements-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .courses-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .select-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .stat-card { text-align: center; padding: 18px 14px; }
+    .stat-value { font-size: 1.8rem; font-weight: 900; margin-bottom: 6px; }
+
+    .badge-card, .course-card {
+      padding: 16px;
+      border-radius: 22px;
+      background: var(--subcard);
+      border: 1px solid var(--border);
+    }
+
+    .course-card { cursor: pointer; transition: transform 0.15s ease; }
+    .course-card:hover { transform: translateY(-2px); }
+
+    .badge-icon { font-size: 1.7rem; margin-bottom: 8px; }
+    .badge-name { font-weight: 800; margin-bottom: 4px; }
+
+    .progress-wrap { margin: 16px 0; }
+
+    .progress {
+      height: 15px;
+      border-radius: 999px;
+      background: rgba(120, 130, 120, 0.18);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #58cc02, #9ff23a);
+      transition: width 0.7s ease;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-weight: 800;
+      font-size: 0.85rem;
+      border: 1px solid rgba(88, 204, 2, 0.18);
+    }
+
+    .module { margin: 18px 0; }
+
+    .card-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+
+    .card-row:hover { transform: translateX(2px); }
+
+    .lesson-main {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .lesson-icon { font-size: 1.2rem; padding-top: 2px; }
+    .lesson-title { font-weight: 800; }
+
+    .lesson-section {
+      margin: 18px 0;
+      padding: 16px;
+      border-radius: 20px;
+      background: var(--subcard);
+      border: 1px solid var(--border);
+    }
+
+    .checklist {
+      margin: 0;
+      padding-left: 20px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .callout {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--primary-soft);
+      border: 1px solid rgba(88, 204, 2, 0.18);
+    }
+
+    .tutor-messages {
+      min-height: 220px;
+      max-height: 340px;
+      overflow: auto;
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      background: var(--subcard);
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .tutor-msg {
+      max-width: 86%;
+      padding: 11px 13px;
+      border-radius: 16px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .tutor-msg.user {
+      justify-self: end;
+      background: var(--primary-soft);
+      border: 1px solid rgba(88, 204, 2, 0.18);
+    }
+
+    .tutor-msg.assistant {
+      justify-self: start;
+      background: rgba(120, 130, 120, 0.12);
+      border: 1px solid var(--border);
+    }
+
+    .question-card { margin: 14px 0; }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--subcard);
+      cursor: pointer;
+    }
+
+    .score-card {
+      text-align: center;
+      padding: 28px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(88, 204, 2, 0.95), rgba(16, 185, 129, 0.9));
+      color: #04240b;
+      margin-bottom: 16px;
+    }
+
+    .score-number {
+      font-size: clamp(2.6rem, 7vw, 4rem);
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .result-card { border-left: 6px solid transparent; }
+    .result-correct { border-left-color: var(--primary); background: rgba(88, 204, 2, 0.08); }
+    .result-incorrect { border-left-color: var(--danger); background: var(--danger-soft); }
+
+    .practice-question {
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .practice-question:last-child { border-bottom: 0; }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    .table th, .table td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .table th { color: var(--muted); font-size: 0.9rem; }
+
+    .empty {
+      padding: 22px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 18px;
+      background: var(--subcard);
+    }
+
+    .loading {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(4px);
+    }
+
+    .loading-inner {
+      display: grid;
+      place-items: center;
+      gap: 12px;
+      padding: 26px 30px;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      font-weight: 800;
+    }
+
+    .spinner {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 5px solid rgba(88, 204, 2, 0.2);
+      border-top-color: var(--primary);
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 120;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s ease;
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 13px 18px;
+      border-radius: 16px;
+      font-weight: 700;
+      max-width: min(92vw, 560px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.error { border-color: rgba(255, 75, 75, 0.4); }
+
+    @media (max-width: 768px) {
+      .stat-grid, .achievements-grid, .courses-grid, .select-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .view { width: calc(100% - 16px); margin-top: 14px; }
+      .card { padding: 16px; border-radius: 20px; }
+      .stat-grid, .achievements-grid, .courses-grid, .select-grid { grid-template-columns: 1fr; }
+      .btn { width: 100%; justify-content: center; }
+      .row { display: grid; }
+      .card-row { flex-direction: column; align-items: flex-start; }
+      .lesson-action { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">🌱 LearnJoy</div>
+    <div class="top-actions">
+      <span id="streak-pill" class="pill hidden">🔥 0</span>
+      <button id="btn-dashboard" class="btn btn-secondary btn-small auth-only hidden">Dashboard</button>
+      <button id="btn-new-course" class="btn btn-secondary btn-small auth-only hidden">New Course</button>
+      <button id="btn-theme" class="btn btn-secondary btn-small">🌙</button>
+      <button id="btn-logout" class="btn btn-secondary btn-small auth-only hidden">Logout</button>
+    </div>
+  </div>
+
+  <main>
+    <section id="view-login" class="view">
+      <div class="card auth-card">
+        <h1>Welcome back</h1>
+        <p class="muted">Learn anything, bite by bite. No pressure, just progress.</p>
+        <input id="login-username" placeholder="Username" autocomplete="username" autocapitalize="none">
+        <input id="login-password" type="password" placeholder="Password" autocomplete="current-password">
+        <div class="row">
+          <button id="btn-login" class="btn btn-primary">Sign In</button>
+          <button id="btn-register" class="btn btn-secondary">Create Account</button>
+        </div>
+        <p class="muted tiny">Passwords are stored only as secure hashes.</p>
+      </div>
+    </section>
+
+    <section id="view-dashboard" class="view hidden">
+      <div id="welcome-card" class="card gradient-card"></div>
+      <div id="stats-grid" class="stat-grid"></div>
+
+      <div class="card">
+        <h2>Achievements</h2>
+        <div id="achievements-grid" class="achievements-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>Your Courses</h2>
+        <div id="courses-grid" class="courses-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>Recent Quiz Scores</h2>
+        <div id="recent-scores"></div>
+      </div>
+    </section>
+
+    <section id="view-generate" class="view hidden">
+      <div class="card">
+        <button id="btn-generate-back" class="btn btn-secondary btn-small">← Back</button>
+        <h1>Create a course</h1>
+        <p class="muted">Tell the AI what you want to learn. It will build bite-sized modules and lessons.</p>
+        <textarea id="gen-topic" placeholder="What do you want to learn? e.g. JavaScript basics, Spanish travel phrases, Astronomy"></textarea>
+        <div class="select-grid">
+          <select id="gen-level">
+            <option value="Beginner">🌱 Beginner</option>
+            <option value="Intermediate">🌿 Intermediate</option>
+            <option value="Advanced">🌳 Advanced</option>
+          </select>
+          <select id="gen-time">
+            <option value="5 minutes per day">⚡ 5 minutes/day</option>
+            <option value="10 minutes per day" selected>☕ 10 minutes/day</option>
+            <option value="15 minutes per day">📘 15 minutes/day</option>
+            <option value="20 minutes per day">🚀 20 minutes/day</option>
+          </select>
+          <select id="gen-style">
+            <option value="Visual">🎨 Visual</option>
+            <option value="Reading">📖 Reading</option>
+            <option value="Practical">🛠️ Practical</option>
+            <option value="Balanced" selected>🧠 Balanced</option>
+          </select>
+        </div>
+        <div class="row">
+          <button id="btn-generate" class="btn btn-primary">Generate Course</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-course" class="view hidden">
+      <div class="card">
+        <button id="btn-course-back" class="btn btn-secondary btn-small">← Dashboard</button>
+        <div id="course-detail"></div>
+      </div>
+    </section>
+
+    <section id="view-lesson" class="view hidden">
+      <div class="card">
+        <button id="btn-lesson-back" class="btn btn-secondary btn-small">← Course</button>
+        <div id="lesson-detail"></div>
+
+        <div class="row">
+          <button id="btn-complete-lesson" class="btn btn-primary">Complete Lesson</button>
+          <button id="btn-take-quiz" class="btn btn-secondary">Take Quiz</button>
+        </div>
+
+        <div class="subcard">
+          <h3>AI Tutor</h3>
+          <div id="tutor-messages" class="tutor-messages"></div>
+          <div class="row">
+            <input id="tutor-input" placeholder="Ask about this lesson...">
+            <button id="btn-tutor-send" class="btn btn-primary">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-quiz" class="view hidden">
+      <div class="card">
+        <button id="btn-quiz-back" class="btn btn-secondary btn-small">← Lesson</button>
+        <div id="quiz-detail"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="loading" class="loading hidden">
+    <div class="loading-inner">
+      <div class="spinner"></div>
+      <div id="loading-text">Loading...</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const CONFIG = { API_URL: "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE" };
+
+    var state = {
+      user: null,
+      dashboard: null,
+      course: null,
+      lesson: null,
+      quiz: null,
+      quizResults: null,
+      lastScore: null,
+      review: null
+    };
+
+    function $(id) { return document.getElementById(id); }
+
+    function init() {
+      initTheme();
+      bindTopbar();
+      bindLogin();
+      bindGenerate();
+      bindCourse();
+      bindLesson();
+      bindQuiz();
+      loadConfig();
+
+      var token = lsGet('lj_token');
+      if (token) {
+        showLoading('Loading your dashboard...');
+        api('getDashboard').then(function (res) {
+          afterAuth(res.user, res);
+        }).catch(function (err) {
+          clearAuth();
+          showView('login');
+          hideLoading();
+          showToast(err.message, 'error');
+        });
+      } else {
+        showView('login');
+      }
+    }
+
+    function api(action, params, noAuth) {
+      if (!CONFIG.API_URL || String(CONFIG.API_URL).indexOf('PASTE_YOUR') !== -1) {
+        return Promise.reject(new Error('Set CONFIG.API_URL in index.html to your Apps Script /exec URL.'));
+      }
+
+      var token = noAuth ? '' : (lsGet('lj_token') || '');
+
+      return fetch(CONFIG.API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: action, params: params || {}, token: token })
+      }).then(function (res) {
+        return res.text().then(function (text) {
+          var data;
+          try {
+            data = JSON.parse(text);
+          } catch (parseErr) {
+            console.error('Unexpected API response:', CONFIG.API_URL, text && text.slice(0, 300));
+            throw new Error('Backend returned an unexpected response. Check API_URL ends with /exec and access = Anyone.');
+          }
+          if (!data || data.success === false) {
+            throw new Error((data && data.error) || 'Request failed');
+          }
+          return data;
+        });
+      }).catch(function (err) {
+        if (err instanceof TypeError) {
+          console.error('API fetch failed. API URL:', CONFIG.API_URL);
+          throw new Error('Cannot reach backend: check API_URL ends with /exec and access = Anyone.');
+        }
+        throw err;
+      });
+    }
+
+    function showView(name) {
+      document.querySelectorAll('.view').forEach(function (v) { v.classList.add('hidden'); });
+      var el = $('view-' + name);
+      if (el) el.classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function showLoading(text) {
+      $('loading-text').textContent = text || 'Loading...';
+      $('loading').classList.remove('hidden');
+    }
+
+    function hideLoading() {
+      $('loading').classList.add('hidden');
+    }
+
+    var toastTimer = null;
+    function showToast(message, type) {
+      var t = $('toast');
+      t.textContent = message;
+      t.className = 'toast show' + (type ? ' ' + type : '');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () {
+        t.className = 'toast';
+      }, 4200);
+    }
+
+    function esc(v) {
+      return String(v === undefined || v === null ? '' : v).replace(/[&<>"']/g, function (c) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[c];
+      });
+    }
+
+    function textHtml(v) {
+      return esc(v).replace(/\n/g, '<br>');
+    }
+
+    function listHtml(items, emptyText) {
+      if (!items || !items.length) return emptyBox(emptyText || 'Nothing here yet.');
+      return '<ul class="checklist">' + items.map(function (item) {
+        return '<li>' + textHtml(item) + '</li>';
+      }).join('') + '</ul>';
+    }
+
+    function emptyBox(text) {
+      return '<div class="empty">' + esc(text) + '</div>';
+    }
+
+    function fmtDate(s) {
+      if (!s) return '';
+      var d = new Date(s);
+      if (isNaN(d.getTime())) return esc(s);
+      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' ' +
+        d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function lsGet(key) {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+
+    function lsSet(key, value) {
+      try { localStorage.setItem(key, value); } catch (e) {}
+    }
+
+    function lsDel(key) {
+      try { localStorage.removeItem(key); } catch (e) {}
+    }
+
+    function initTheme() {
+      var stored = lsGet('lj_theme');
+      var theme = stored;
+      if (!theme) {
+        theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+      }
+      setTheme(theme);
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      lsSet('lj_theme', theme);
+      $('btn-theme').textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+
+    function toggleTheme() {
+      var current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      setTheme(current);
+    }
+
+    function bindTopbar() {
+      $('btn-theme').addEventListener('click', toggleTheme);
+      $('btn-dashboard').addEventListener('click', refreshDashboard);
+      $('btn-new-course').addEventListener('click', function () { showView('generate'); });
+      $('btn-logout').addEventListener('click', logout);
+    }
+
+    function bindLogin() {
+      $('btn-login').addEventListener('click', function () { doAuth('login'); });
+      $('btn-register').addEventListener('click', function () { doAuth('register'); });
+
+      ['login-username', 'login-password'].forEach(function (id) {
+        $(id).addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') doAuth('login');
+        });
+      });
+    }
+
+    function loadConfig() {
+      api('getConfig', {}, true).then(function (res) {
+        if (res && res.allowRegister === false) $('btn-register').classList.add('hidden');
+        else $('btn-register').classList.remove('hidden');
+      }).catch(function (err) {
+        if (String(CONFIG.API_URL).indexOf('PASTE_YOUR') !== -1) {
+          showToast('Set CONFIG.API_URL to your Apps Script /exec URL', 'error');
+        }
+      });
+    }
+
+    function doAuth(action) {
+      var username = $('login-username').value.trim();
+      var password = $('login-password').value;
+
+      if (!username || !password) {
+        showToast('Enter username and password', 'error');
+        return;
+      }
+
+      showLoading(action === 'login' ? 'Signing in...' : 'Creating account...');
+
+      api(action, { username: username, password: password, userAgent: navigator.userAgent }, true)
+        .then(function (res) {
+          lsSet('lj_token', res.session.token);
+          lsSet('lj_user', JSON.stringify(res.user));
+          state.user = res.user;
+          return api('getDashboard');
+        })
+        .then(function (res) {
+          afterAuth(res.user, res);
+          showToast(action === 'login' ? 'Welcome back!' : 'Account created. Welcome!');
+        })
+        .catch(function (err) {
+          hideLoading();
+          showToast(err.message, 'error');
+        });
+    }
+
+    function logout() {
+      showLoading('Signing out...');
+      api('logout').catch(function () {}).then(function () {
+        clearAuth();
+        showToast('Signed out');
+      });
+    }
+
+    function clearAuth() {
+      lsDel('lj_token');
+      lsDel('lj_user');
+      state = {
+        user: null,
+        dashboard: null,
+        course: null,
+        lesson: null,
+        quiz: null,
+        quizResults: null,
+        lastScore: null,
+        review: null
+      };
+      updateTopbar(null, 0);
+      showView('login');
+      hideLoading();
+    }
+
+    function afterAuth(user, dashboard) {
+      state.user = user;
+      state.dashboard = dashboard;
+      lsSet('lj_user', JSON.stringify(user));
+      updateTopbar(user, dashboard.streak || 0);
+      renderDashboard(dashboard);
+      showView('dashboard');
+      hideLoading();
+    }
+
+    function refreshDashboard() {
+      showLoading('Refreshing dashboard...');
+      api('getDashboard').then(function (res) {
+        afterAuth(res.user, res);
+      }).catch(function (err) {
+        hideLoading();
+        showToast(err.message, 'error');
+      });
+    }
+
+    function updateTopbar(user, streak) {
+      var authed = !!(lsGet('lj_token') && user);
+      document.querySelectorAll('.auth-only').forEach(function (el) {
+        if (authed) el.classList.remove('hidden');
+        else el.classList.add('hidden');
+      });
+
+      var pill = $('streak-pill');
+      if (authed) {
+        pill.classList.remove('hidden');
+        pill.textContent = '🔥 ' + String(streak || 0);
+      } else {
+        pill.classList.add('hidden');
+      }
+    }
+
+    function renderDashboard(d) {
+      var user = d.user || {};
+      var hour = new Date().getHours();
+      var greeting = hour < 12 ? 'Good morning' : (hour < 18 ? 'Good afternoon' : 'Good evening');
+
+      $('welcome-card').innerHTML =
+        '<h1>' + esc(greeting + ', ' + (user.name || user.username || 'learner')) + '!</h1>' +
+        '<p class="muted">🔥 ' + esc(String(d.streak || 0)) + ' day streak · ' + esc(String(d.completedLessons || 0)) + ' lessons completed</p>' +
+        '<div class="row">' +
+          '<button class="btn btn-secondary" id="dash-generate">Generate New Course</button>' +
+          (d.continueCourseId ? '<button class="btn btn-secondary" id="dash-continue">Continue Learning</button>' : '') +
+        '</div>';
+
+      $('dash-generate').addEventListener('click', function () { showView('generate'); });
+      if (d.continueCourseId) {
+        $('dash-continue').addEventListener('click', function () { openCourse(d.continueCourseId); });
+      }
+
+      $('stats-grid').innerHTML = [
+        statCard_('Courses', d.courses ? d.courses.length : 0),
+        statCard_('Lessons Done', d.completedLessons || 0),
+        statCard_('Avg Quiz Score', d.averageScore ? d.averageScore + '%' : '—'),
+        statCard_('Day Streak', d.streak || 0)
+      ].join('');
+
+      if (d.achievements && d.achievements.length) {
+        $('achievements-grid').innerHTML = d.achievements.map(function (a) {
+          return '<div class="badge-card"><div class="badge-icon">' + esc(a.icon) + '</div>' +
+            '<div class="badge-name">' + esc(a.name) + '</div>' +
+            '<div class="muted small">' + esc(a.description) + '</div></div>';
+        }).join('');
+      } else {
+        $('achievements-grid').innerHTML = emptyBox('No achievements yet — complete a lesson to earn your first badge!');
+      }
+
+      if (d.courses && d.courses.length) {
+        $('courses-grid').innerHTML = d.courses.map(function (c) {
+          return '<div class="card course-card" data-courseid="' + esc(c.courseId) + '">' +
+            '<h3>' + esc(c.title) + '</h3>' +
+            '<p class="muted small">' + esc(String(c.description || '').slice(0, 150)) + '</p>' +
+            '<div class="progress"><div class="progress-fill" style="width:' + Number(c.progressPercent || 0) + '%"></div></div>' +
+            '<div class="muted small" style="margin-top:8px;">' + esc(String(c.progressPercent || 0)) + '% complete · ' +
+            esc(String(c.totalLessons || 0)) + ' lessons</div>' +
+          '</div>';
+        }).join('');
+
+        document.querySelectorAll('#courses-grid .course-card').forEach(function (card) {
+          card.addEventListener('click', function () {
+            openCourse(card.getAttribute('data-courseid'));
+          });
+        });
+      } else {
+        $('courses-grid').innerHTML = emptyBox('No courses yet. Generate your first course!');
+      }
+
+      if (d.recentScores && d.recentScores.length) {
+        var rows = d.recentScores.map(function (s) {
+          return '<tr><td>' + fmtDate(s.createdAt) + '</td>' +
+            '<td>' + esc(s.courseTitle) + '</td>' +
+            '<td>' + esc(s.lessonTitle) + '</td>' +
+            '<td><strong>' + esc(String(s.score)) + '%</strong></td></tr>';
+        }).join('');
+
+        $('recent-scores').innerHTML =
+          '<table class="table"><thead><tr><th>Date</th><th>Course</th><th>Lesson</th><th>Score</th></tr></thead><tbody>' +
+          rows + '</tbody></table>';
+      } else {
+        $('recent-scores').innerHTML = emptyBox('No quiz scores yet.');
+      }
+    }
+
+    function statCard_(label, value) {
+      return '<div class="card stat-card"><div class="stat-value">' + esc(String(value)) + '</div>' +
+        '<div class="muted">' + esc(label) + '</div></div>';
+    }
+
+    function bindGenerate() {
+      $('btn-generate-back').addEventListener('click', function () { showView('dashboard'); });
+
+      $('btn-generate').addEventListener('click', function () {
+        var topic = $('gen-topic').value.trim();
+        if (topic.length < 3) {
+          showToast('Enter a topic first', 'error');
+          return;
+        }
+
+        var p = {
+          prompt: topic,
+          level: $('gen-level').value,
+          timeAvailable: $('gen-time').value,
+          learningStyle: $('gen-style').value
+        };
+
+        showLoading('Generating your course...');
+        api('generateCourse', p).then(function (res) {
+          hideLoading();
+          showToast('Course generated!');
+          openCourse(res.course.courseId);
+        }).catch(function (err) {
+          hideLoading();
+          showToast(err.message, 'error');
+        });
+      });
+    }
+
+    function bindCourse() {
+      $('btn-course-back').addEventListener('click', function () {
+        showView('dashboard');
+        refreshDashboard();
+      });
+    }
+
+    function openCourse(courseId) {
+      showLoading('Opening course...');
+      api('getCourseById', { courseId: courseId }).then(function (res) {
+        state.course = res.course;
+        renderCourse(res.course);
+        showView('course');
+        hideLoading();
+      }).catch(function (err) {
+        hideLoading();
+        showToast(err.message, 'error');
+      });
+    }
+
+    function renderCourse(c) {
+      var badges =
+        '<span class="badge">' + esc(c.level) + '</span>' +
+        '<span class="badge">' + esc(c.timeAvailable) + '</span>' +
+        '<span class="badge">' + esc(c.learningStyle) + '</span>' +
+        '<span class="badge">' + esc(String(c.estimatedHours)) + ' h</span>';
+
+      var modulesHtml = '';
+      if (!c.modules || !c.modules.length) {
+        modulesHtml = emptyBox('No modules found.');
+      } else {
+        c.modules.forEach(function (m) {
+          modulesHtml += '<div class="module"><h3>' + esc(m.title) + '</h3>';
+          m.lessons.forEach(function (l) {
+            var icon = l.completed ? '✅' : '📖';
+            var label = l.completed ? 'Review' : 'Start';
+            modulesHtml +=
+              '<div class="subcard card-row lesson-row" data-course="' + esc(c.courseId) + '" data-module="' + esc(String(m.moduleIndex)) + '" data-lesson="' + esc(String(l.lessonIndex)) + '">' +
+                '<div class="lesson-main">' +
+                  '<div class="lesson-icon">' + icon + '</div>' +
+                  '<div>' +
+                    '<div class="lesson-title">' + esc(l.title) + '</div>' +
+                    '<div class="muted small">' + esc(l.summary) + '</div>' +
+                  '</div>' +
+                '</div>' +
+                '<button class="btn btn-small btn-secondary lesson-action">' + label + '</button>' +
+              '</div>';
+          });
+          modulesHtml += '</div>';
+        });
+      }
+
+      $('course-detail').innerHTML =
+        '<h1>' + esc(c.title) + '</h1>' +
+        '<p class="muted">' + textHtml(c.description) + '</p>' +
+        '<div class="row wrap">' + badges + '</div>' +
+        '<div class="progress-wrap">' +
+          '<div class="progress"><div id="course-progress-fill" class="progress-fill"></div></div>' +
+          '<div class="muted small" style="margin-top:8px;">' + esc(String(c.completedCount)) + ' of ' + esc(String(c.totalLessons)) + ' lessons</div>' +
+        '</div>' +
+        modulesHtml;
+
+      setTimeout(function () {
+        var fill = $('course-progress-fill');
+        if (fill) fill.style.width = (c.progressPercent || 0) + '%';
+      }, 60);
+
+      document.querySelectorAll('#course-detail .lesson-row').forEach(function (row) {
+        row.addEventListener('click', function () {
+          openLesson(
+            row.getAttribute('data-course'),
+            Number(row.getAttribute('data-module')),
+            Number(row.getAttribute('data-lesson'))
+          );
+        });
+      });
+    }
+
+    function openLesson(courseId, moduleIndex, lessonIndex) {
+      showLoading('Preparing lesson...');
+      api('generateLesson', { courseId: courseId, moduleIndex: moduleIndex, lessonIndex: lessonIndex })
+        .then(function (res) {
+          state.lesson = res.lesson;
+          renderLesson(res.lesson);
+          showView('lesson');
+          hideLoading();
+        })
+        .catch(function (err) {
+          hideLoading();
+          showToast(err.message, 'error');
+        });
+    }
+
+    function bindLesson() {
+      $('btn-lesson-back').addEventListener('click', function () {
+        if (state.course && state.course.courseId) openCourse(state.course.courseId);
+        else showView('dashboard');
+      });
+
+      $('btn-complete-lesson').addEventListener('click', completeLesson);
+      $('btn-take-quiz').addEventListener('click', takeQuiz);
+      $('btn-tutor-send').addEventListener('click', sendTutor);
+
+      $('tutor-input').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') sendTutor();
+      });
+    }
+
+    function renderLesson(l) {
+      var content = l.content || {};
+      var exercise = content.exercise || {};
+
+      var html =
+        '<h1>' + esc(l.lessonTitle) + '</h1>' +
+        '<p class="muted">' + esc(l.moduleTitle) + '</p>' +
+        '<div class="lesson-section"><h2>Introduction</h2><div>' + textHtml(content.introduction) + '</div></div>' +
+        '<div class="lesson-section"><h2>Key Points</h2>' + listHtml(content.keyPoints, 'No key points') + '</div>' +
+        '<div class="lesson-section"><h2>Examples</h2>' + listHtml(content.examples, 'No examples') + '</div>' +
+        '<div class="lesson-section"><h2>Common Mistakes</h2>' + listHtml(content.commonMistakes, 'No common mistakes') + '</div>' +
+        '<div class="lesson-section"><h2>Practice Exercise</h2>' +
+          '<div>' + textHtml(exercise.prompt) + '</div>' +
+          '<div class="row">' +
+            '<button class="btn btn-small btn-secondary" id="btn-show-hint">Show Hint</button>' +
+            '<button class="btn btn-small btn-secondary" id="btn-show-solution">Show Solution</button>' +
+          '</div>' +
+          '<div id="exercise-hint" class="callout hidden">' + textHtml(exercise.hint) + '</div>' +
+          '<div id="exercise-solution" class="callout hidden">' + textHtml(exercise.solution) + '</div>' +
+        '</div>' +
+        '<div class="lesson-section"><h2>Summary</h2><div>' + textHtml(content.summary) + '</div></div>' +
+        '<div class="lesson-section"><h2>My Note</h2>' +
+          '<textarea id="note-content" placeholder="Write a personal note about this lesson..."></textarea>' +
+          '<div class="row"><button class="btn btn-small btn-secondary" id="btn-save-note">Save Note</button></div>' +
+        '</div>';
+
+      $('lesson-detail').innerHTML = html;
+
+      $('btn-show-hint').addEventListener('click', function () { toggleHidden('exercise-hint'); });
+      $('btn-show-solution').addEventListener('click', function () { toggleHidden('exercise-solution'); });
+      $('btn-save-note').addEventListener('click', saveNote);
+
+      var completeBtn = $('btn-complete-lesson');
+      if (l.completed) {
+        completeBtn.textContent = 'Completed ✅';
+        completeBtn.disabled = true;
+      } else {
+        completeBtn.textContent = 'Complete Lesson';
+        completeBtn.disabled = false;
+      }
+
+      resetTutor();
+      loadNote(l.lessonId);
+    }
+
+    function toggleHidden(id) {
+      var el = $(id);
+      if (el) el.classList.toggle('hidden');
+    }
+
+    function loadNote(lessonId) {
+      api('getNotes', { lessonId: lessonId }).then(function (res) {
+        var noteArea = $('note-content');
+        if (noteArea && res.notes && res.notes.length) {
+          noteArea.value = res.notes[0].content || '';
+        }
+      }).catch(function () {});
+    }
+
+    function saveNote() {
+      if (!state.lesson) return;
+      var content = $('note-content').value;
+      api('saveNote', { lessonId: state.lesson.lessonId, content: content }).then(function () {
+        showToast('Note saved');
+      }).catch(function (err) {
+        showToast(err.message, 'error');
+      });
+    }
+
+    function completeLesson() {
+      if (!state.lesson) return;
+      showLoading('Saving progress...');
+      api('markLessonComplete', { courseId: state.lesson.courseId, lessonId: state.lesson.lessonId })
+        .then(function (res) {
+          hideLoading();
+          state.lesson.completed = true;
+          var btn = $('btn-complete-lesson');
+          btn.textContent = 'Completed ✅';
+          btn.disabled = true;
+
+          if (state.user) {
+            state.user.streak = res.streak;
+            state.user.totalLessons = res.totalLessons;
+          }
+          updateTopbar(state.user, res.streak);
+
+          showToast('Lesson completed. Nice work!');
+          if (res.courseCompleted) showToast('🏆 Course complete! Amazing!');
+        })
+        .catch(function (err) {
+          hideLoading();
+          showToast(err.message, 'error');
+        });
+    }
+
+    function takeQuiz() {
+      if (!state.lesson) return;
+      showLoading('Preparing quiz...');
+      api('generateQuiz', { courseId: state.lesson.courseId, lessonId: state.lesson.lessonId })
+        .then(function (res) {
+          state.quiz = res.quiz;
+          state.quizResults = null;
+          state.lastScore = null;
+          state.review = null;
+          renderQuiz();
+          showView('quiz');
+          hideLoading();
+        })
+        .catch(function (err) {
+          hideLoading();
+          showToast(err.message, 'error');
+        });
+    }
+
+    function resetTutor() {
+      $('tutor-messages').innerHTML = '';
+      appendTutorMessage('assistant', 'Hi! Ask me anything about this lesson. I keep answers short and helpful.');
+    }
+
+    function appendTutorMessage(role, text) {
+      var div = document.createElement('div');
+      div.className = 'tutor-msg ' + role;
+      div.innerHTML = textHtml(text);
+      $('tutor-messages').appendChild(div);
+      $('tutor-messages').scrollTop = $('tutor-messages').scrollHeight;
+    }
+
+    function sendTutor() {
+      if (!state.lesson) return;
+      var input = $('tutor-input');
+      var question = input.value.trim();
+      if (!question) return;
+
+      appendTutorMessage('user', question);
+      input.value = '';
+      input.disabled = true;
+      $('btn-tutor-send').disabled = true;
+
+      api('askTutor', { lessonId: state.lesson.lessonId, question: question })
+        .then(function (res) {
+          appendTutorMessage('assistant', res.answer);
+        })
+        .catch(function (err) {
+          appendTutorMessage('assistant', err.message);
+        })
+        .then(function () {
+          input.disabled = false;
+          $('btn-tutor-send').disabled = false;
+          input.focus();
+        });
+    }
+
+    function bindQuiz() {
+      $('btn-quiz-back').addEventListener('click', function () {
+        if (state.lesson) {
+          renderLesson(state.lesson);
+          showView('lesson');
+        } else {
+          showView('dashboard');
+        }
+      });
+    }
+
+    function renderQuiz() {
+      var q = state.quiz;
+      if (!q || !q.questions) {
+        $('quiz-detail').innerHTML = emptyBox('No quiz available.');
+        return;
+      }
+
+      var html = '<h1>Quiz</h1><p class="muted">' + esc(state.lesson ? state.lesson.lessonTitle : '') + '</p><form id="quiz-form">';
+
+      q.questions.forEach(function (question, idx) {
+        html += '<div class="subcard question-card"><h3>' + esc(String(idx + 1) + '. ' + question.prompt) + '</h3>';
+
+        if (question.type === 'mc') {
+          html += '<div class="options">';
+          question.options.forEach(function (opt, oi) {
+            var id = 'opt_' + question.id + '_' + oi;
+            html += '<label class="option" for="' + esc(id) + '">' +
+              '<input type="radio" id="' + esc(id) + '" name="' + esc(question.id) + '" value="' + esc(opt) + '"> ' +
+              '<span>' + esc(opt) + '</span></label>';
+          });
+          html += '</div>';
+        } else if (question.type === 'tf') {
+          html += '<div class="options">' +
+            '<label class="option"><input type="radio" name="' + esc(question.id) + '" value="true"> <span>True</span></label>' +
+            '<label class="option"><input type="radio" name="' + esc(question.id) + '" value="false"> <span>False</span></label>' +
+          '</div>';
+        } else {
+          html += '<input class="short-answer" name="' + esc(question.id) + '" placeholder="Your answer">';
+        }
+
+        html += '</div>';
+      });
+
+      html += '<button type="submit" class="btn btn-primary">Submit Quiz</button></form>';
+      $('quiz-detail').innerHTML = html;
+
+      $('quiz-form').addEventListener('submit', submitQuizForm);
+    }
+
+    function submitQuizForm(e) {
+      e.preventDefault();
+      if (!state.quiz || !state.lesson) return;
+
+      var answers = [];
+      state.quiz.questions.forEach(function (q) {
+        var answer = '';
+        if (q.type === 'short') {
+          var input = document.querySelector('input[name="' + q.id + '"]');
+          answer = input ? input.value : '';
+        } else {
+          var checked = document.querySelector('input[name="' + q.id + '"]:checked');
+          answer = checked ? checked.value : '';
+        }
+        answers.push({ questionId: q.id, answer: answer });
+      });
+
+      showLoading('Checking quiz...');
+      api('submitQuiz', { courseId: state.lesson.courseId, lessonId: state.lesson.lessonId, answers: answers })
+        .then(function (res) {
+          hideLoading();
+          state.quizResults = res.results;
+          state.lastScore = res.score;
+          renderQuizResults(res);
+        })
+        .catch(function (err) {
+          hideLoading();
+          showToast(err.message, 'error');
+        });
+    }
+
+    function renderQuizResults(res) {
+      var html =
+        '<div class="score-card"><div class="score-number">' + esc(String(res.score)) + '%</div>' +
+        '<div><strong>' + esc(String(res.correct)) + ' of ' + esc(String(res.total)) + ' correct</strong></div></div>';
+
+      html += '<div class="results">';
+      res.results.forEach(function (r, i) {
+        var cls = r.correct ? 'result-correct' : 'result-incorrect';
+        html += '<div class="subcard result-card ' + cls + '">' +
+          '<h3>' + esc(String(i + 1) + '. ' + r.prompt) + '</h3>' +
+          '<p><strong>' + (r.correct ? '✅ Correct' : '❌ Not quite') + '</strong></p>' +
+          '<p class="small"><strong>Your answer:</strong> ' + textHtml(r.userAnswer || '—') + '</p>' +
+          '<p class="small"><strong>Answer:</strong> ' + textHtml(r.correctAnswer || '—') + '</p>' +
+          '<p class="small muted">' + textHtml(r.explanation) + '</p>' +
+        '</div>';
+      });
+      html += '</div>';
+
+      html += '<div class="row">' +
+        '<button class="btn btn-secondary" id="quiz-back-lesson">Back to Lesson</button>' +
+        (res.score < 70 ? '<button class="btn btn-primary" id="btn-generate-review">Generate Review</button>' : '') +
+      '</div>';
+
+      html += '<div id="review-area"></div>';
+      $('quiz-detail').innerHTML = html;
+
+      $('quiz-back-lesson').addEventListener('click', function () {
+        renderLesson(state.lesson);
+        showView('lesson');
+      });
+
+      if (res.score < 70) {
+        $('btn-generate-review').addEventListener('click', generateReview);
+      }
+    }
+
+    function generateReview() {
+      if (!state.lesson) return;
+      showLoading('Creating review...');
+      api('generateReview', { courseId: state.lesson.courseId, lessonId: state.lesson.lessonId, score: state.lastScore || 0 })
+        .then(function (res) {
+          hideLoading();
+          var review = res.review;
+
+          var html = '<div class="subcard review-card">' +
+            '<h2>Review</h2>' +
+            '<h3>Simplified Explanation</h3><div>' + textHtml(review.simplifiedExplanation) + '</div>' +
+            '<h3>Review Lesson</h3><div>' + textHtml(review.reviewLesson) + '</div>' +
+            '<h3>Extra Practice</h3>';
+
+          review.practiceQuestions.forEach(function (pq, i) {
+            html += '<div class="practice-question">' +
+              '<strong>' + esc(String(i + 1) + '. ' + pq.prompt) + '</strong>' +
+              '<div class="small" style="margin-top:6px;"><strong>Answer:</strong> ' + textHtml(pq.answer) + '</div>' +
+              '<div class="small muted" style="margin-top:4px;">' + textHtml(pq.explanation) + '</div>' +
+            '</div>';
+          });
+
+          html += '</div>';
+          var area = $('review-area');
+          if (area) area.innerHTML = html;
+        })
+        .catch(function (err) {
+          hideLoading();
+          showToast(err.message, 'error');
+        });
+    }
+
+    init();
+  </script>
+</body>
+</html>

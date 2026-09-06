@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LearnJoy — Bite-sized AI Learning</title>
+  <meta name="description" content="LearnJoy turns any topic into bite-sized AI-generated lessons, quizzes, flashcards and an AI tutor. Learn anything, bite by bite.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7ffe9">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#070d18">
+  <meta property="og:title" content="LearnJoy — Bite-sized AI Learning">
+  <meta property="og:description" content="Turn any topic into bite-sized lessons, quizzes and flashcards with AI.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2358cc02'/><text x='50' y='72' font-size='60' text-anchor='middle'>🌱</text></svg>">
+  <link rel="manifest" href='data:application/manifest+json,{"name":"LearnJoy","short_name":"LearnJoy","start_url":".","display":"standalone","background_color":"%23f7ffe9","theme_color":"%2358cc02","description":"Bite-sized AI learning"}'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- ============================================================
+       APP CONFIG — edit this block only.
+       Set API_URL to your Google Apps Script web app /exec URL.
+       Leave it as "demo" (or empty) to run fully offline demo mode.
+       ============================================================ -->
+  <script>
+    window.APP_CONFIG = {
+      API_URL: "https://script.google.com/macros/s/AKfycbzwZlSVkPmMbI5a_QdHPJh1W5n2ATnTG03oSvH90KT8dUEqmb52ymbbcJu064Vlc61SIA/exec"
+    };
+  </script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#/dashboard" id="brand-home" aria-label="LearnJoy home">
+        <span class="brand-logo" aria-hidden="true">🌱</span> LearnJoy
+      </a>
+      <div class="top-actions">
+        <span id="net-pill" class="pill pill-net" role="status" title="Connection status">🟢 Online</span>
+        <span id="streak-pill" class="pill hidden" title="Daily streak">🔥 0</span>
+        <span id="goal-pill" class="pill hidden" title="Daily lesson goal">🎯 0/3</span>
+        <span id="xp-pill" class="pill hidden" title="Experience points">⚡ Lv 1</span>
+        <button id="btn-dashboard" type="button" class="btn btn-secondary btn-small auth-only hidden">Dashboard</button>
+        <button id="btn-new-course" type="button" class="btn btn-secondary btn-small auth-only hidden">＋ New Course</button>
+        <button id="btn-notes" type="button" class="icon-btn auth-only hidden" aria-label="My notes" title="My notes">✍️</button>
+        <button id="btn-theme" type="button" class="icon-btn" aria-label="Toggle dark or light theme">🌙</button>
+        <button id="btn-settings" type="button" class="icon-btn" aria-label="Settings">⚙️</button>
+        <button id="btn-logout" type="button" class="btn btn-secondary btn-small auth-only hidden">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="offline-banner" class="offline-banner hidden" role="alert">
+    📡 You're offline — showing saved content. Changes will sync when you reconnect.
+  </div>
+
+  <main id="main">
+
+    <!-- ======================= LOGIN / REGISTER ======================= -->
+    <section id="view-login" class="view" aria-labelledby="auth-title">
+      <div class="card auth-card">
+        <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+          <button id="tab-login" type="button" class="auth-tab active" role="tab" aria-selected="true">Sign in</button>
+          <button id="tab-register" type="button" class="auth-tab" role="tab" aria-selected="false">Create account</button>
+        </div>
+
+        <h1 id="auth-title" tabindex="-1">Welcome back</h1>
+        <p class="muted" id="auth-subtitle">Learn anything, bite by bite. No pressure, just progress.</p>
+
+        <form id="auth-form" novalidate>
+          <label class="field-label" for="auth-username">Username</label>
+          <input id="auth-username" placeholder="e.g. curious_fox" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="32" required>
+
+          <label class="field-label" for="auth-password">Password</label>
+          <div class="password-wrap">
+            <input id="auth-password" type="password" placeholder="Your password" autocomplete="current-password" minlength="4" required>
+            <button type="button" id="btn-show-password" class="peek-btn" aria-label="Show password" aria-pressed="false">👁</button>
+          </div>
+
+          <div id="register-extras" class="hidden">
+            <label class="field-label" for="auth-password2">Repeat password</label>
+            <input id="auth-password2" type="password" placeholder="Repeat password" autocomplete="new-password" minlength="4">
+            <div class="strength-meter" aria-hidden="true"><div id="strength-fill" class="strength-fill"></div></div>
+            <p id="strength-label" class="tiny muted">Use 8+ characters with numbers &amp; symbols for a strong password.</p>
+          </div>
+
+          <label class="check-row">
+            <input type="checkbox" id="auth-remember" checked>
+            <span class="small">Remember my username on this device</span>
+          </label>
+
+          <p id="auth-error" class="form-error hidden" role="alert"></p>
+
+          <div class="row">
+            <button id="btn-auth-submit" type="submit" class="btn btn-primary grow">Sign In</button>
+          </div>
+        </form>
+
+        <div class="divider"><span>or</span></div>
+
+        <button id="btn-demo" type="button" class="btn btn-ghost wide">
+          🎮 Just exploring? Try the instant demo — no account needed
+        </button>
+        <p class="muted tiny center" id="auth-backend-note"></p>
+        <p class="muted tiny center">Passwords are stored only as secure hashes.</p>
+      </div>
+    </section>
+
+    <!-- ======================= DASHBOARD ======================= -->
+    <section id="view-dashboard" class="view hidden" aria-labelledby="dash-heading">
+      <div id="welcome-card" class="card gradient-card"></div>
+      <div id="stats-grid" class="stat-grid"></div>
+
+      <div class="card">
+        <h2>🏆 Achievements</h2>
+        <div id="achievements-grid" class="achievements-grid"></div>
+      </div>
+
+      <div id="review-card" class="card hidden">
+        <h2>🔁 Needs review</h2>
+        <p class="muted small">Quiz scores under 70% — a quick retake makes it stick.</p>
+        <div id="review-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2 id="dash-heading">Your Courses</h2>
+          <input id="course-search" class="search-input" type="search" placeholder="🔎 Search courses…" aria-label="Search your courses">
+        </div>
+        <div id="courses-grid" class="courses-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>📈 Recent Quiz Scores</h2>
+        <div id="score-chart" class="score-chart" aria-hidden="true"></div>
+        <div id="recent-scores"></div>
+      </div>
+    </section>
+
+    <!-- ======================= GENERATE ======================= -->
+    <section id="view-generate" class="view hidden" aria-labelledby="gen-title">
+      <div class="card">
+        <button id="btn-generate-back" type="button" class="btn btn-secondary btn-small">← Back</button>
+        <h1 id="gen-title" tabindex="-1">Create a course</h1>
+        <p class="muted">Tell the AI what you want to learn. It builds bite-sized modules, lessons, quizzes and flashcards for you.</p>
+
+        <label class="field-label" for="gen-topic">What do you want to learn?</label>
+        <textarea id="gen-topic" placeholder="e.g. JavaScript basics, Spanish travel phrases, Astronomy, Chess openings…" maxlength="200"></textarea>
+        <div class="row spread">
+          <button id="btn-idea" type="button" class="btn btn-ghost btn-small">🎲 Inspire me</button>
+          <span id="gen-topic-count" class="tiny muted">0 / 200</span>
+        </div>
+
+        <div class="select-grid">
+          <div class="field">
+            <label class="field-label" for="gen-level">Level</label>
+            <select id="gen-level">
+              <option value="Beginner">🌱 Beginner</option>
+              <option value="Intermediate">🌿 Intermediate</option>
+              <option value="Advanced">🌳 Advanced</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="gen-time">Daily time</label>
+            <select id="gen-time">
+              <option value="5 minutes per day">⚡ 5 minutes/day</option>
+              <option value="10 minutes per day" selected>☕ 10 minutes/day</option>
+              <option value="15 minutes per day">📘 15 minutes/day</option>
+              <option value="20 minutes per day">🚀 20 minutes/day</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="gen-style">Learning style</label>
+            <select id="gen-style">
+              <option value="Visual">🎨 Visual</option>
+              <option value="Reading">📖 Reading</option>
+              <option value="Practical">🛠️ Practical</option>
+              <option value="Balanced" selected>🧠 Balanced</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <button id="btn-generate" type="button" class="btn btn-primary">✨ Generate Course</button>
+          <span class="tiny muted">Tip: press Ctrl/⌘ + Enter in the topic box</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= COURSE DETAIL ======================= -->
+    <section id="view-course" class="view hidden" aria-labelledby="course-heading">
+      <div class="card">
+        <button id="btn-course-back" type="button" class="btn btn-secondary btn-small">← Dashboard</button>
+        <h1 id="course-heading" class="visually-hidden">Course</h1>
+        <div id="course-detail"></div>
+      </div>
+    </section>
+
+    <!-- ======================= LESSON PLAYER ======================= -->
+    <section id="view-lesson" class="view focus-view hidden" aria-label="Lesson player">
+      <div class="card player-card">
+        <div class="player-top">
+          <button id="btn-lesson-back" type="button" class="icon-btn" aria-label="Back to course">←</button>
+          <div class="player-progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="lesson-progress-bar">
+            <div id="lesson-progress-fill" class="player-progress-fill"></div>
+          </div>
+          <div id="lesson-count" class="muted small count-pill">1/1</div>
+        </div>
+
+        <div id="lesson-slides" class="slides" aria-live="polite"></div>
+        <div id="lesson-dots" class="dots" role="tablist" aria-label="Slides"></div>
+
+        <div class="player-nav">
+          <button id="btn-slide-prev" type="button" class="btn btn-secondary">← Back</button>
+          <button id="btn-slide-next" type="button" class="btn btn-primary">Next →</button>
+        </div>
+
+        <div class="lesson-actions row">
+          <button id="btn-complete-lesson" type="button" class="btn btn-primary">✓ Complete Lesson</button>
+          <button id="btn-take-quiz" type="button" class="btn btn-secondary">🧠 Take Quiz</button>
+          <button id="btn-flashcards" type="button" class="btn btn-secondary">🃏 Flashcards</button>
+          <button id="btn-next-lesson" type="button" class="btn btn-secondary" title="Jump to the next incomplete lesson">⏭ Next</button>
+          <button id="btn-copy-lesson-link" type="button" class="btn btn-ghost btn-small" title="Copy a shareable link to this lesson">🔗 Share</button>
+        </div>
+
+        <div class="subcard tutor-card">
+          <button id="tutor-toggle" class="tutor-toggle" type="button" aria-expanded="false" aria-controls="tutor-body">
+            <span>💬 AI Tutor</span>
+            <span id="tutor-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div id="tutor-body" class="tutor-body hidden">
+            <div id="tutor-messages" class="tutor-messages" aria-live="polite"></div>
+            <div class="chips" id="tutor-suggestions">
+              <button type="button" class="chip chip-btn">Explain it simpler</button>
+              <button type="button" class="chip chip-btn">Give me an example</button>
+              <button type="button" class="chip chip-btn">Quiz me on this</button>
+            </div>
+            <div class="tutor-input-row">
+              <input id="tutor-input" placeholder="Ask about this lesson…" aria-label="Ask the AI tutor" maxlength="400">
+              <button id="btn-tutor-send" type="button" class="btn btn-primary">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= FLASHCARDS ======================= -->
+    <section id="view-flashcards" class="view focus-view hidden" aria-label="Flashcards">
+      <div class="card player-card">
+        <div class="player-top">
+          <button id="btn-flash-back" type="button" class="icon-btn" aria-label="Back to lesson">←</button>
+          <div class="player-progress" aria-hidden="true"><div id="flash-progress-fill" class="player-progress-fill"></div></div>
+          <div id="flash-count" class="muted small count-pill">1/1</div>
+        </div>
+
+        <div id="flash-area">
+          <p class="center muted small" id="flash-hint">Tap the card to flip it. Space also flips. 1 = still learning, 2 = got it.</p>
+          <div id="flash-card" class="flashcard" role="button" tabindex="0" aria-label="Flashcard, press to flip">
+            <div class="flash-inner" id="flash-inner">
+              <div class="flash-face flash-front" id="flash-front"></div>
+              <div class="flash-face flash-back" id="flash-back"></div>
+            </div>
+          </div>
+          <div class="player-nav">
+            <button id="btn-flash-again" type="button" class="btn btn-secondary">🔁 Still learning</button>
+            <button id="btn-flash-know" type="button" class="btn btn-primary">✅ Got it!</button>
+          </div>
+          <div class="row center">
+            <button id="btn-flash-shuffle" type="button" class="btn btn-ghost btn-small">🔀 Shuffle remaining</button>
+          </div>
+        </div>
+
+        <div id="flash-done" class="hidden">
+          <div class="score-card">
+            <div class="score-number" id="flash-score">0/0</div>
+            <div><strong id="flash-done-label">Deck complete!</strong></div>
+          </div>
+          <div class="row center">
+            <button id="btn-flash-restart" type="button" class="btn btn-secondary">Restart deck</button>
+            <button id="btn-flash-to-quiz" type="button" class="btn btn-primary">Take the quiz →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= QUIZ ======================= -->
+    <section id="view-quiz" class="view focus-view hidden" aria-label="Quiz">
+      <div class="card player-card">
+        <div class="player-top">
+          <button id="btn-quiz-back" type="button" class="icon-btn" aria-label="Back to lesson">←</button>
+          <div class="player-progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="quiz-progress-bar">
+            <div id="quiz-progress-fill" class="player-progress-fill"></div>
+          </div>
+          <span id="quiz-timer" class="pill tiny" title="Time spent">⏱ 0:00</span>
+          <div id="quiz-count" class="muted small count-pill">1/5</div>
+        </div>
+
+        <div id="quiz-dots" class="dots" role="tablist" aria-label="Questions"></div>
+        <div id="quiz-slide" class="slides" aria-live="polite"></div>
+        <div id="quiz-feedback" class="quiz-feedback hidden" aria-live="assertive"></div>
+
+        <div class="player-nav" id="quiz-nav">
+          <span id="quiz-streak" class="pill tiny hidden" title="Correct answers in a row">⚡ 0 in a row</span>
+          <span class="quiz-nav-btns">
+            <button id="btn-quiz-check" type="button" class="btn btn-primary" disabled>Check</button>
+            <button id="btn-quiz-next" type="button" class="btn btn-primary hidden">Continue →</button>
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================= SETTINGS MODAL ======================= -->
+  <div id="modal-settings" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="settings-title" class="modal-title">⚙️ Settings</h2>
+        <button type="button" class="modal-close" data-close="modal-settings" aria-label="Close settings">✕</button>
+      </div>
+
+      <h3>Preferences</h3>
+      <label class="check-row"><input type="checkbox" id="set-sound" checked><span>🔊 Sound effects</span></label>
+      <label class="check-row"><input type="checkbox" id="set-animations" checked><span>✨ Animations &amp; confetti</span></label>
+      <label class="check-row"><input type="checkbox" id="set-bigfont"><span>🔍 Larger text</span></label>
+      <label class="check-row goal-row"><span>🎯 Daily goal (lessons per day)</span><input type="number" id="set-goal" min="1" max="20" value="3"></label>
+      <p class="tiny muted">Theme tip: the 🌙 button cycles light → dark → auto (follows your system).</p>
+
+      <h3>Your progress</h3>
+      <div class="subcard small" id="settings-xp-box">⚡ Level 1 · 0 XP</div>
+
+      <h3>Data</h3>
+      <div class="row wrap">
+        <button type="button" class="btn btn-secondary btn-small" id="btn-export-data">⬇️ Export my data</button>
+        <button type="button" class="btn btn-secondary btn-small" id="btn-clear-cache">🧹 Clear offline cache</button>
+        <button type="button" class="btn btn-secondary btn-small" id="btn-reset-demo">♻️ Reset demo data</button>
+      </div>
+
+      <h3>About</h3>
+      <p class="muted small">LearnJoy <span id="about-version">v2.0</span> — bite-sized AI learning.<br>
+      Shortcuts: press <kbd>?</kbd> anywhere to see keyboard shortcuts, <kbd>Ctrl/⌘ K</kbd> for the command palette.</p>
+    </div>
+  </div>
+
+  <!-- ======================= NOTES MODAL ======================= -->
+  <div id="modal-notes" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="notes-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="notes-title" class="modal-title">✍️ My Notes</h2>
+        <button type="button" class="modal-close" data-close="modal-notes" aria-label="Close notes">✕</button>
+      </div>
+      <p class="muted small">Everything you wrote on lesson ✍️ note slides, newest first.</p>
+      <div id="notes-list" class="notes-list"></div>
+    </div>
+  </div>
+
+  <!-- ======================= SHORTCUTS MODAL ======================= -->
+  <div id="modal-shortcuts" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="shortcuts-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="shortcuts-title" class="modal-title">⌨️ Keyboard shortcuts</h2>
+        <button type="button" class="modal-close" data-close="modal-shortcuts" aria-label="Close shortcuts">✕</button>
+      </div>
+      <table class="table">
+        <tbody>
+          <tr><td><kbd>Ctrl/⌘ K</kbd></td><td>Command palette</td></tr>
+          <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Previous / next slide (lesson)</td></tr>
+          <tr><td><kbd>Q</kbd> / <kbd>F</kbd> / <kbd>T</kbd></td><td>Quiz / Flashcards / Tutor (on a lesson)</td></tr>
+          <tr><td><kbd>N</kbd></td><td>Jump to the next incomplete lesson</td></tr>
+          <tr><td><kbd>1</kbd>–<kbd>9</kbd></td><td>Pick a quiz option</td></tr>
+          <tr><td><kbd>T</kbd> / <kbd>F</kbd></td><td>Answer True / False</td></tr>
+          <tr><td><kbd>Enter</kbd></td><td>Check answer / continue quiz</td></tr>
+          <tr><td><kbd>Space</kbd></td><td>Flip flashcard</td></tr>
+          <tr><td><kbd>1</kbd> / <kbd>2</kbd></td><td>Flashcard: still learning / got it</td></tr>
+          <tr><td><kbd>?</kbd></td><td>This help</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>Close dialogs</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ======================= CONFIRM MODAL ======================= -->
+  <div id="modal-confirm" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal-card modal-small">
+      <div class="modal-header">
+        <h2 id="confirm-title" class="modal-title">Are you sure?</h2>
+        <button type="button" class="modal-close" data-close="modal-confirm" aria-label="Close">✕</button>
+      </div>
+      <p id="confirm-text" class="muted"></p>
+      <div class="row">
+        <button type="button" class="btn btn-secondary grow" id="btn-confirm-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary grow" id="btn-confirm-ok">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= COMMAND PALETTE ======================= -->
+  <div id="modal-palette" class="modal-overlay palette-overlay hidden" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="modal-card palette-card">
+      <input id="palette-input" class="palette-input" placeholder="Type a command… (dashboard, new course, theme, a course name)" aria-label="Command palette">
+      <div id="palette-list" class="palette-list" role="listbox"></div>
+    </div>
+  </div>
+
+  <!-- ======================= OVERLAYS ======================= -->
+  <div id="loading" class="loading" aria-hidden="true">
+    <div class="loading-inner">
+      <div class="loading-logo" aria-hidden="true">🌱</div>
+      <div id="loading-text">Loading…</div>
+      <div id="loading-sub" class="muted small"></div>
+      <div class="loading-bar"><div id="loading-fill" class="loading-bar-fill"></div></div>
+      <div id="loading-tip" class="muted tiny"></div>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <noscript>
+    <div class="noscript-banner">LearnJoy needs JavaScript to run. Please enable it and reload the page.</div>
+  </noscript>
+</body>
+</html>
